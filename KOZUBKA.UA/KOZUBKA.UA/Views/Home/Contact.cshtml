@@ -1,0 +1,109 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@inject Wangkanai.Detection.Services.IDetectionService _detectionRepository
+@{ 
+    string email = @_settingRepository.Settings.Where(d => d.Key == ua.kozubka.context.Classes.Constants.SettingsOptions.SupportEmail.ToString()).SingleOrDefault().Value;
+    var googleCaptchaSiteKey = _settingRepository.Settings.Where(d => d.Key == ua.kozubka.context.Classes.Constants.SettingsOptions.GoogleReCaptchaSiteKey.ToString()).Select(d => d.Value).FirstOrDefault(); }
+<div class="content-overlay"></div>
+
+<div class="content-wrapper container-xxl p-0" style="align-items: center; justify-content: center; display: flex;">
+    <div class="content-body" style="max-width:400px;padding-top:2em">
+      
+        <section id="basic-horizontal-layouts ">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Форма зв'язку</h4>
+                            <h6>будь ласка, відправте нам повідомлення і ми відповимо на нього в короткий час</h6>
+                        </div>
+                        <div class="card-body">
+                            <form class="form form-horizontal" method="post" asp-controller="Home" asp-action="Contact">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="mb-1 row">
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label" for="fname-icon">Ім'я <span>*</span></label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i data-feather="user"></i></span>
+                                                    <input type="text" id="fname-icon"  name="feedbackname" required class="form-control" placeholder="Ваше Ім'я" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="mb-1 row">
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label" for="contact-icon">Телефон<span>*</span></label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i data-feather="smartphone"></i></span>
+                                                    <input type="tel" class="form-control" id="feedbackphone" required name="feedbacktel" placeholder="Телефон" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="mb-1 row">
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label" for="email-icon">Email</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i data-feather="mail"></i></span>
+                                                    <input type="email" id="email-icon" class="form-control" name="feedbackemail"  placeholder="Email" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="mb-1 row">
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label" for="pass-icon">Повідомлення<span>*</span></label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <textarea required data-length="400" maxlength="400" class="form-control char-textarea" id="textarea-counter" rows="3" placeholder="Ваше повідомлення" style="height: 100px" name="feedbackmessage"></textarea>
+                                            <small style="margin-top:2px" class="textarea-counter-value float-end"><span class="char-count">0</span> / 400 </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-9 offset-sm-3">
+                                        <input type="hidden" name="captcha" id="captchaInputLogin" value="" />
+                                        <button type="submit" class="w-100 btn btn-primary me-1">Надіслати</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        </section>
+      
+      
+       
+
+    </div>
+</div>
+
+@section ScriptsDown
+{
+    <script src="~/assets/plugins/jquery.maskplugin/src/jquery.mask.js"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@googleCaptchaSiteKey"></script>
+    <script>
+    grecaptcha.ready(function() {
+        grecaptcha.execute('@googleCaptchaSiteKey', { action: 'contact' }).then(function (token) {
+            $("#captchaInputRegister").val(token);
+            $("#captchaInputLogin").val(token);
+        });
+    });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#feedbackphone").mask("+38 (000) 000-0000", { placeholder: "+38 (000) 000-0000" });
+
+        });
+    </script>
+}
+

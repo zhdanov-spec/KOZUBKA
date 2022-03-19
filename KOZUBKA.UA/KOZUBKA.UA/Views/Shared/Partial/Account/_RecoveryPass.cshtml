@@ -1,0 +1,27 @@
+﻿<div class="card-body" id="recoverydiv">
+    <a asp-controller="Home" asp-action="Index" class="brand-logo">
+
+        <h2 class="brand-text text-primary ms-1">KOZUBKA.UA</h2>
+    </a>
+    <div class="alert alert-danger" role="alert" asp-validation-summary="ModelOnly"></div>
+    <h4 class="card-title mb-1">Відновлення паролю! 📞</h4>
+    <p class="card-text mb-2">Будь ласка, напишіть отриманний код</p>
+    <div>
+
+        <div class="mb-1">
+            <label for="login-email" class="form-label">Код</label>
+            <input type="hidden" id="phonepartial" value="@Model" />
+            <input class="form-control text-center" type="text" id="otpcode" tabindex="1" autofocus />
+        </div>
+
+
+        <input type="hidden" name="captcha" id="captchaInputLogin" value="" />
+        <button class="btn btn-primary w-100" id="changepass" tabindex="4">Відновити</button>
+        <p class="text-center mt-2">
+            <a asp-controller="Account" asp-action="Login"> <i data-feather="chevron-left"></i> Повернутись до авторизації </a>
+        </p>
+    </div>
+    
+
+
+</div>

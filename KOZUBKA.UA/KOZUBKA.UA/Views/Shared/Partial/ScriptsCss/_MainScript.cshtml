@@ -1,0 +1,58 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@{
+    var fileSite = _settingRepository.Settings.Where(d => d.Key == ua.kozubka.context.Classes.Constants.SettingsOptions.FileSite.ToString()).Select(d => d.Value).SingleOrDefault();
+}
+<script src="@string.Format("{0}/assets/plugins/bootstrap-notify/bootstrap-notify.min.js",fileSite)"></script>
+<script>
+    function showNotificationError(jqXHR, exception) {
+        if (jqXHR.status === 0) {
+            showNotification('bg-danger-b', 'Ви не підключені до мережі. Перевірте підключення', 'top', 'right', 'animated fadeInDown', 'animated fadeOutUp');
+        } else if (jqXHR.status == 404) {
+            showNotification('bg-danger-b', 'Не знайдена сторінка (404).', 'top', 'right', 'animated fadeInDown', 'animated fadeOutUp');
+        } else if (jqXHR.status == 500) {
+            showNotification('bg-danger-b', 'Внутрішня помилка серверу (500).', 'top', 'right', 'animated fadeInDown', 'animated fadeOutUp');
+        } else if (exception === 'parsererror') {
+            showNotification('bg-danger-b', 'Не змогли обробити запит.', 'top', 'right', 'animated fadeInDown', 'animated fadeOutUp');
+        } else if (exception === 'timeout') {
+            showNotification('bg-danger-b', 'Час вийшов - помилка.', 'top', 'right', 'animated fadeInDown', 'animated fadeOutUp');
+        } else if (exception === 'abort') {
+            showNotification('bg-danger-b', 'Ajax запит перервано.', 'top', 'right', 'animated fadeInDown', 'animated fadeOutUp');
+        } else {
+            showNotification('bg-danger-b', 'Не визначена помилка. ' + jqXHR.responseText, 'top', 'right', 'animated fadeInDown', 'animated fadeOutUp');
+        }
+    };
+    function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit) {
+        if (colorName === null || colorName === '') { colorName = 'bg-black'; }
+        if (text === null || text === '') { text = 'Необхідно використовувати другі стандартні механізми'; }
+        if (animateEnter === null || animateEnter === '') { animateEnter = 'animated fadeInDown'; }
+        if (animateExit === null || animateExit === '') { animateExit = 'animated fadeOutUp'; }
+        var allowDismiss = true;
+
+        $.notify({
+            message: text
+        },
+            {
+                type: colorName,
+                z_index: 3000,
+                allow_dismiss: allowDismiss,
+                newest_on_top: true,
+                timer: 500,
+                placement: {
+                    from: placementFrom,
+                    align: placementAlign
+                },
+                animate: {
+                    enter: animateEnter,
+                    exit: animateExit
+                },
+                template: '<div data-notify="container" class="bootstrap-notify-container alert-b alert-dismissible {0} ' + (allowDismiss ? "" : "") + '" role="alert">' +
+                    '<span data-notify="title">{1}</span> ' +
+                    '<span data-notify="message" style="margin:10px;color:white">{2}</span>' +
+                    '<div class="progress" data-notify="progressbar">' +
+                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+
+                    '</div>'
+            });
+    };
+</script>

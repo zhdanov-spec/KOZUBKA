@@ -1,0 +1,116 @@
+﻿@inject ua.kozubka.context.Services.Repositories.GeneralRepository.IDesignerRepository _designer
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@{
+    var fileSite = _settingRepository.Settings.Where(d => d.Key == ua.kozubka.context.Classes.Constants.SettingsOptions.FileSite.ToString()).Select(d => d.Value).SingleOrDefault();
+}
+
+@{
+    Layout = null;
+}
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="Templist - HTML5 Premium Digital goods marketplace directory jquery css responsive website Template" name="description">
+    <meta content="Spruko Technologies Private Limited" name="author">
+    <meta name="keywords" content="digital goods, digital marketplace, easy digital downloads, marketplace website, multi vendor, online marketplace, digital download, marketplace, best marketplace, best marketplace websites, building an online marketplace, digital goods marketplace, digital product marketplace, internet marketplace, marketplace html template, marketplace template, marketplace website template, online marketplace to sell, web marketplace, bootstrap 4 marketplace template, bootstrap marketplace, bootstrap marketplace template, digital marketplace html template, html marketplace template, marketplace bootstrap template, marketplace template bootstrap, marketplace template html, multi vendor html template, template marketplace bootstrap" />
+
+
+    <link rel="icon" href="~/assets/images/brand/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/brand/favicon.ico" />
+
+
+    <title>@string.Format("Повідомлення Сайту ", _designer.GetSiteName)</title>
+
+    <!-- Bootstrap css -->
+    <link href="@string.Format("{0}/assets/plugins/bootstrap-4.3.1/css/bootstrap.min.css",fileSite)" rel="stylesheet" />
+
+    <!-- Style css -->
+    <link href="@string.Format("{0}/assets/css/style.css",fileSite)" rel="stylesheet" />
+    <link href="@string.Format("{0}/assets/css/skin-modes.css",fileSite)" rel="stylesheet" />
+
+    <!-- Font-awesome  css -->
+    <link href="@string.Format("{0}/assets/css/icons.css",fileSite)" rel="stylesheet" />
+
+    <!--Select2 css -->
+    <link href="@string.Format("{0}/assets/plugins/select2/select2.min.css",fileSite)" rel="stylesheet" />
+    <!-- Custom scroll bar css-->
+    <link href="@string.Format("{0}/assets/plugins/scroll-bar/jquery.mCustomScrollbar.css",fileSite)" rel="stylesheet" />
+
+    <!--Image-tooltip css-->
+    <link href="@string.Format("{0}/assets/plugins/image-tooltip/image-tooltip.css",fileSite)" rel="stylesheet" />
+
+    <!-- Color Skin css -->
+    <link id="theme" rel="stylesheet" type="text/css" media="all" href="@string.Format("{0}/assets/color-skins/color9.css",fileSite)" />
+
+</head>
+
+<body class="construction-image construction-image1">
+
+
+    <div id="global-loader">
+        <img src="@string.Format("{0}/assets/images/loader.svg",fileSite)" class="loader-img" alt="kozubka">
+    </div>
+
+    <div class="page page-h">
+        <div class="page-content z-index-10">
+            <div class="container text-center">
+                <div class="display-2 text-white mb-5">@_designer.GetSiteName</div>
+                <h1 class="h2 text-white  mb-3">@ViewBag.Message</h1>
+                <p class="h4 font-weight-normal mb-7 leading-normal text-white">Зараз відбудеться перехід на сторінку, якщо цього не відбулось натисніть кнопку нижче</p>
+                <a class="btn ripple  btn-secondary" asp-controller="Home" asp-action="Index">
+                    Перейти На Головну
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <a href="#top" id="back-to-top"><i class="fa fa-long-arrow-up"></i></a>
+
+    <!-- JQuery js-->
+    <script src="@string.Format("{0}/assets/js/jquery-3.2.1.min.js",fileSite)"></script>
+
+    <!-- Bootstrap js -->
+    <script src="@string.Format("{0}/assets/plugins/bootstrap-4.3.1/js/popper.min.js",fileSite)"></script>
+    <script src="@string.Format("{0}/assets/plugins/bootstrap-4.3.1/js/bootstrap.min.js",fileSite)"></script>
+
+    <!--JQuery IT Itemsrkline js-->
+    <script src="@string.Format("{0}/assets/js/jquery.sparkline.min.js",fileSite)"></script>
+
+    <!-- Circle Progress js-->
+    <script src="@string.Format("{0}/assets/js/circle-progress.min.js",fileSite)"></script>
+
+    <!-- Star Rating js-->
+    <script src="@string.Format("{0}/assets/plugins/rating/jquery.rating-stars.js",fileSite)"></script>
+
+    <!--Owl Carousel js -->
+    <script src="@string.Format("{0}/assets/plugins/owl-carousel/owl.carousel.js",fileSite)"></script>
+
+    <!--JQuery TouchSwipe js-->
+    <script src="@string.Format("{0}/assets/js/jquery.touchSwipe.min.js",fileSite)"></script>
+
+    <!--Select2 js -->
+    <script src="@string.Format("{0}/assets/plugins/select2/select2.full.min.js",fileSite)"></script>
+    <script src="@string.Format("{0}/assets/js/select2.js",fileSite)"></script>
+
+    <!-- Custom scroll bar js-->
+    <script src="@string.Format("{0}/assets/plugins/scroll-bar/jquery.mCustomScrollbar.js",fileSite)"></script>
+
+    <!-- sticky js-->
+    <script src="@string.Format("{0}/assets/js/sticky.js",fileSite)"></script>
+
+    <!-- Image-tooltip js -->
+    <script src="@string.Format("{0}/assets/plugins/image-tooltip/image-tooltip.js",fileSite)"></script>
+
+    <!-- Swipe js-->
+    <script src="@string.Format("{0}/assets/js/swipe.js",fileSite)"></script>
+
+    <!-- Scripts js-->
+    <script src="@string.Format("{0}/assets/js/owl-carousel.js",fileSite)"></script>
+
+    <!-- Custom Js-->
+    <script src="@string.Format("{0}/assets/js/custom.js",fileSite)"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.UserRepository _userRepository
+@inject ua.kozubka.context.Services.Repositories.GeneralRepository.IDesignerRepository _designerRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+
+@{
+    var filesite = _settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.FileSite);
+    var currentUser = _userRepository.Users.Where(c => c.UserName == User.Identity.Name).FirstOrDefault();
+    var googleTageManager = _settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.GoogleTagManager);
+    var hi = "Доброго дня!";
+    if (DateTime.Now.Hour >= 5 && DateTime.Now.Hour < 10)
+    {
+        hi = "Доброго рануку!";
+    }
+    else if (DateTime.Now.Hour >= 18 && DateTime.Now.Hour <= 22)
+    {
+        hi = "Доброго вечора!";
+    }
+    else if (DateTime.Now.Hour > 22 && DateTime.Now.Hour <= 24)
+    {
+        hi = "Доброї ночі!";
+    }
+    else if (DateTime.Now.Hour >= 0 && DateTime.Now.Hour < 5)
+    {
+        hi = "Доброї ночі!";
+    }
+    string termsLink = _settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.TermsLink);
+    string privacyLink = _settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.PrivacyLink);
+    string contactLink = _settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.ContactLink);
+
+}
+
+<!DOCTYPE html>
+<html class="loading" lang="uk" data-textdirection="ltr">
+<head>
+    @if (!string.IsNullOrEmpty(googleTageManager))
+    {
+        <script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', '@googleTageManager');
+        </script>
+    }
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
+    <meta name="description" content="Продукти, товари, робота, відпочинок та інші сервіси шукайте на KOZUBKA™">
+    <meta name="keywords" content="Продукти, відпочинок, товари, пошук работи, блоги, соціальна мережа">
+    <meta name="author" content="ZPSoft">
+    <title>KOZUBKA™ - все в одному місці</title>
+    <link rel="apple-touch-icon" href="~/app-assets/images/ico/apple-icon-120.png">
+    <link rel="shortcut icon" type="image/x-icon" href="~/app-assets/images/ico/kozubka.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/vendors.min.css">
+    <!-- END: Vendor CSS-->
+    <!--BEGIN: Kozubka Main Style-->
+    @{ await Html.RenderPartialAsync("Partial/ScriptsCss/_MainCSS"); }
+    <!--END: Kozubka Main Style-->
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/bootstrap-extended.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/colors.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/components.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/themes/dark-layout.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/themes/bordered-layout.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/themes/semi-dark-layout.css">
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/core/menu/menu-types/horizontal-menu.css">
+    <link rel="stylesheet" type="text/css" href="~/app-assets/css/pages/page-knowledge-base.css">
+    <!-- END: Page CSS-->
+    @RenderSection("ScriptsTop", required: false)
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <!-- END: Custom CSS-->
+
+</head>
+<!-- END: Head-->
+<!-- BEGIN: Body-->
+
+<body class="horizontal-layout horizontal-menu  navbar-floating footer-static  " data-open="hover" data-menu="horizontal-menu" data-col="">
+
+    <!-- BEGIN: Header-->
+    <nav class="header-navbar navbar-expand-lg navbar navbar-fixed align-items-center navbar-shadow navbar-brand-center" data-nav="brand-center">
+        <div class="navbar-header d-xl-block d-none">
+            <ul class="nav navbar-nav">
+                <li class="nav-item">
+                    <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                         @*@if(User.IsInRole("workemployer"))
+                         { 
+                             <label>В роли</label>
+                             }
+                         else
+                         { 
+                             <label>Не в роли</label>
+                             }*@
+                        <img  src="~/assets/img/logo/kozubka.png" height="24"/>
+                        <h2 class="brand-text mb-0" style="margin-top:4px">KOZUBKA.UA</h2>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-container d-flex content">
+            <div class="bookmark-wrapper d-flex align-items-center">
+                <ul class="nav navbar-nav d-xl-none">
+                    <li class="nav-item"><a class="nav-link menu-toggle" href="#"><i class="ficon" data-feather="menu"></i></a></li>
+                </ul>
+                <ul class="nav navbar-nav bookmark-icons">
+                
+                </ul>
+                
+            </div>
+            <ul class="nav navbar-nav align-items-center ms-auto">
+               
+                
+                <li class="nav-item dropdown dropdown-user">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="user-nav d-sm-flex d-none">
+                                <span class="user-name fw-bolder">@hi</span>
+                                <span class="user-status">@currentUser?.UName</span>
+                            </div>
+                            <span class="avatar">
+                                @if(!string.IsNullOrEmpty(currentUser?.UserImage_200_200))
+                                {
+                                    <img class="round" src="@string.Format("{0}{1}",filesite,currentUser?.UserImage_200_200)" alt="avatar" height="40" width="40">
+                                }
+                                else
+                                {
+                                    <img class="round" src="@string.Format("{0}/assets/images/user/no-avatar.png",filesite)" alt="avatar" height="40" width="40">
+                                }
+                            `   <span class="avatar-status-online"></span>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
+                            <a class="dropdown-item" asp-controller="Profile" asp-action="Index"><i class="me-50" data-feather="user"></i> Профіль</a>
+                            <a class="dropdown-item"asp-controller="Account" asp-action="Logout"><i class="me-50" data-feather="power"></i> Вийти</a>
+                        </div>
+                    }
+                    else 
+                    {
+                        <a class="dropdown-user-link" asp-controller="Account" asp-action="Login" aria-haspopup="true" aria-expanded="false">
+                            <div class="user-nav d-sm-flex d-none">
+                                <span class="user-name fw-bolder">@hi</span>
+                                <span class="user-status">Гість</span>
+                            </div>
+                            <span class="avatar">
+                                <img class="round" src="@string.Format("{0}/assets/images/user/no-avatar.png",filesite)" alt="avatar" height="40" width="40">
+                            
+                            </span>
+                        </a>
+
+                        
+                    }
+                </li>
+
+              
+
+            </ul>
+        </div>
+    </nav>
+    <div class="app-content content ">
+        @RenderBody()
+    </div>
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+    <footer class="footer footer-static footer-light">
+        <p class="clearfix mb-0">
+            <span class="float-md-start d-block d-md-inline-block mt-25">&copy; Сервіси <a class="ms-25" href="@_designerRepository.GetSiteUrlFull">KOZUBKA™</a><span class="d-none d-sm-inline-block">, Усі права захищено</span></span>
+            <span class="float-md-end d-none d-md-block">Ручна робота & Зроблено з <i data-feather="heart"></i></span>
+        </p>
+        <p class="clearfix mb-0">
+            <span class="float-md-start d-block d-md-inline-block mt-25"><a class="ms-25" href="@termsLink">Умови використання сайтом</a></span>
+        </p>
+        <p class="clearfix mb-0">
+            <span class="float-md-start d-block d-md-inline-block mt-25"><a class="ms-25" href="@privacyLink">Політика конфідеційності</a></span>
+        </p>
+        <p class="clearfix mb-0">
+            <span class="float-md-start d-block d-md-inline-block mt-25"><a class="ms-25" href="@contactLink">Зворотній зв'язок</a></span>
+        </p>
+    </footer>
+    <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
+    <!-- END: Footer-->
+    <!-- BEGIN: Vendor JS-->
+    <script src="~/app-assets/vendors/js/vendors.min.js"></script>
+    <!-- BEGIN Vendor JS-->
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="~/app-assets/vendors/js/ui/jquery.sticky.js"></script>
+    <!-- END: Page Vendor JS-->
+    <!-- BEGIN: Theme JS-->
+    <script src="~/app-assets/js/core/app-menu.js"></script>
+    <script src="~/app-assets/js/core/app.js"></script>
+    <!-- END: Theme JS-->
+    <!-- BEGIN: Page JS-->
+    <script src="~/app-assets/js/scripts/pages/page-knowledge-base.js"></script>
+    <!-- END: Page JS-->
+    <!--BEGIN: Kozubka Main Script Function-->
+    @{
+        await Html.RenderPartialAsync("Partial/ScriptsCss/_MainScript");
+    }
+    <!--END: Kozubka Main Script Function-->
+
+    <script>
+        $(window).on('load', function () {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        })
+    </script>
+    @RenderSection("ScriptsDown", required: false)
+</body>
+<!-- END: Body-->
+
+</html>

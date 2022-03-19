@@ -1,0 +1,179 @@
+﻿@model ua.kozubka.context.Models.User
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@{
+    var fileSite = _settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.FileSite);
+}
+@section ScriptsTop
+{
+    <link type="text/css" rel="stylesheet" href="~/assets/plugins/multiplefileuploads/filepond/dist/filepond-plugin-image-preview.css">
+    <link type="text/css" rel="stylesheet" href="~/assets/plugins/multiplefileuploads/filepond/dist/filepond.css">
+}
+<div class="content-overlay"></div>
+<div class="header-navbar-shadow"></div>
+<div class="content-wrapper container-xxl" style="margin-top:3rem">    
+    <div class="content-body">
+        <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-pills mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-controller="Profile" asp-action="Index">
+                            <i data-feather="user" class="font-medium-3 me-50"></i>
+                            <span class="fw-bold">Мій профіль</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Profile" asp-action="ChangePassword">
+                            <i data-feather="lock" class="font-medium-3 me-50"></i>
+                            <span class="fw-bold">Безпека</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h4 class="card-title">Деталі профілю</h4>
+                        
+                    </div>
+                    <div class="card-body py-2 my-25">
+                            <div class="alert alert-danger " role="alert" asp-validation-summary="All"></div>
+                            <form  method="post" enctype="multipart/form-data" class="validate-form mt-2 pt-50" asp-controller="Profile" asp-action="Index">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="form-label">Додайте зображення свого профілю</label>
+                                        <input type="file" class="directory-images" name="profileImage" />
+                                    </div>
+                                    
+                                    <div class="col-12 col-sm-6 mb-1">
+                                        <label class="form-label" for="accountFirstName">Ім'я</label>
+                                        <input type="text" class="form-control" required placeholder="Ім'я" asp-for="@Model.UName" data-msg="Please enter first name" />
+                                    </div>
+                                    <div class="col-12 col-sm-6 mb-1">
+                                        <label class="form-label" for="accountLastName">Прізвіще</label>
+                                        <input type="text" class="form-control" placeholder="Прізвіще" asp-for="@Model.ULastName" data-msg="Please enter last name" />
+                                    </div>
+                                    <div class="col-12 col-sm-6 mb-1">
+                                        <label class="form-label" for="accountEmail">Email</label>
+                                        <input type="email" class="form-control" required placeholder="Email" asp-for="@Model.Email" />
+                                    </div>
+                                    <div class="col-12 col-sm-6 mb-1">
+                                        <label class="form-label" for="accountPhoneNumber">Телефон</label>
+                                        <input type="text" class="form-control account-number-mask" required asp-for="@Model.PhoneNumber" />
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary w-100 mt-1 me-1">Зберегти зміни</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    @{ await Html.RenderPartialAsync("Partial/Widgets/_LinkToService");}
+</div>
+
+@section ScriptsDown
+{
+    <script src="~/assets/plugins/jquery.maskplugin/src/jquery.mask.js"></script>
+      <!-- include FilePond library -->
+    <script src="~/assets/plugins/multiplefileuploads/filepond/dist/filepond.min.js"></script>
+    <!-- include FilePond plugins -->
+    <script src="~/assets/plugins/multiplefileuploads/filepond/dist/filepond-plugin-image-preview.min.js"></script>
+    <script src="~/assets/plugins/multiplefileuploads/filepond/dist/filepond-plugin-file-validate-size.min.js"></script>
+    <script src="~/assets/plugins/multiplefileuploads/filepond/dist/filepond-plugin-file-validate-type.min.js"></script>
+    <!-- include FilePond jQuery adapter -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#PhoneNumber").mask("+38 (000) 000-0000", { placeholder: "+38 (000) 000-0000" });
+            
+        });
+    </script>
+    <script>
+    const inputElement = document.querySelector('.directory-images');
+    FilePond.registerPlugin(FilePondPluginImagePreview);
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+    FilePond.setOptions({
+        server: {
+            url: "/api/imagesapi/",
+            process: null,
+            fetch: null,
+            revert: null,
+            remove: null,
+            load: 'getfile?id=',
+            remove: (source, load, error) => {
+                const request = new XMLHttpRequest();
+                request.open('GET', '/api/imagesapi/deleteprofileimage?id=' + source);
+                // Setting computable to false switches the loading indicator to infinite mode
+                request.upload.onprogress = (e) => {
+                    progress(e.lengthComputable, e.loaded, e.total);
+                };
+                request.onload = function () {
+                    if (request.status >= 200 && request.status < 300) {
+                        load();// the load method accepts either a string (id) or an object
+                    }
+                    else {
+                        error('Error while removing file!');
+                    }
+                }
+                request.send(null);
+            }
+        },
+        allowFileTypeValidation: true,
+        acceptedFileTypes: ['image/*'],
+        allowFileSizeValidation: true,
+        maxFileSize: '2MB',
+        storeAsFile: true,
+        allowMultiple: false,
+        maxFiles: 1,
+        labelIdle: 'Перетягніть файли або <span class="filepond--label-action"> виберіть </span>',
+        labelInvalidField: 'Поле містить недопустимі файли',
+        labelFileWaitingForSize: 'Вкажіть розмір',
+        labelFileSizeNotAvailable: 'Розмір не доступний',
+        labelFileLoading: 'Очікування',
+        labelFileLoadError: 'Помилка при очікуванні',
+        labelFileProcessing: 'Завантаження',
+        labelFileProcessingComplete: 'Завантаження завершено',
+        labelFileProcessingAborted: 'Завантаження скасовано',
+        labelFileProcessingError: 'Помилка при завантаженні',
+        labelFileProcessingRevertError: 'Помилка при відновленні',
+        labelFileRemoveError: 'Помилка при видаленні',
+        labelTapToCancel: 'Відмінити',
+        labelTapToRetry: 'Натисніть, щоб повторити спробу',
+        labelTapToUndo: 'Натисніть, щоб відмінити останню дію',
+        labelButtonRemoveItem: 'Видалити',
+        labelButtonAbortItemLoad: 'Відмінити',
+        labelButtonRetryItemLoad: 'Повторити спробу',
+        labelButtonAbortItemProcessing: 'Відмінити',
+        labelButtonUndoItemProcessing: 'Відмінити останню дію',
+        labelButtonRetryItemProcessing: 'Повторити спробу',
+        labelButtonProcessItem: 'Завантаження',
+        labelMaxFileSizeExceeded: 'Файл занадто великий',
+        labelMaxFileSize: 'Максимальний розмір файлу: {filesize}',
+        labelMaxTotalFileSizeExceeded: 'Перевищено максимальний загальний розмір',
+        labelMaxTotalFileSize: 'Максимальний загальний розмір: {filesize}',
+        labelFileTypeNotAllowed: 'Формат файлу не підтримується',
+        fileValidateTypeLabelExpectedTypes: 'Очікується {allButLastType} або {lastType}',
+        imageValidateSizeLabelFormatError: 'Формат зображення не підтримується',
+        imageValidateSizeLabelImageSizeTooSmall: 'Зображення занадто маленьке',
+        imageValidateSizeLabelImageSizeTooBig: 'Зображення занадто велике',
+        imageValidateSizeLabelExpectedMinSize: 'Мінімальний розмір: {minWidth} × {minHeight}',
+        imageValidateSizeLabelExpectedMaxSize: 'Максимальний розмір: {maxWidth} × {maxHeight}',
+        imageValidateSizeLabelImageResolutionTooLow: 'Розміри зображення занадто маленькі',
+        imageValidateSizeLabelImageResolutionTooHigh: 'Розміри зображення занадто великі',
+        imageValidateSizeLabelExpectedMinResolution: 'Мінімальні розміри: {minResolution}',
+        imageValidateSizeLabelExpectedMaxResolution: 'Максимальні розміри: {maxResolution}'
+    });
+    const pond = FilePond.create(inputElement);
+    @{
+        string uploadF = "";
+        if(!string.IsNullOrEmpty(Model.UserImage_200_200))
+        {
+            uploadF = string.Format("{{source:'{0}', options: {{ type: 'local' }}}},", Model.UserImage_200_200);
+        }
+       
+
+    }
+    pond.addFiles([@Html.Raw(uploadF)]);
+
+    </script>
+}

@@ -1,0 +1,24 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.Directory.IDirectoryServicesCollectionRepository _services
+@{
+    var allServices = _services.DirectoryServicesCollections.Where(d => d.Enabled).ToList();
+}
+<section id="basic-button-icons">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Повернутись до сервісу</h4>
+                </div>
+                <div class="card-body">
+                    @foreach (var item in allServices.Where(d => d.Enabled && !d.IsAdminService).OrderBy(d => d.SortOrder))
+                    {
+                        <a href="@item.UrlService" class="btn btn-outline-primary waves-effect" style="margin-right:1.5rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home me-25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                            <span>@item.ShotNameService</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

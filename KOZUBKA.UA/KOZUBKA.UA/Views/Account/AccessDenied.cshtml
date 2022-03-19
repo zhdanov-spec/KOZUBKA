@@ -1,0 +1,32 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@model ua.kozubka.context.ViewModels.AccountViewModels.AccountViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+
+<div class="content-overlay"></div>
+<div class="header-navbar-shadow"></div>
+<div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+        <div class="auth-wrapper auth-basic px-2">
+            <div class="auth-inner my-2">
+                
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <a asp-controller="Home" asp-action="Index" class="brand-logo">
+
+                            <h2 class="brand-text text-primary ms-1">KOZUBKA.UA</h2>
+                        </a>
+
+                        <h4 class="card-title mb-1 text-center">Доступ заборонено! ✋</h4>
+                        <p class="card-text mb-2 text-center"><a asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Model.ReturnUrl">Зайти під іншим обліковим записом</a></p>
+                        <p class="card-text mb-2 text-center"><a asp-controller="Home" asp-action="Index">Почати все с початку</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

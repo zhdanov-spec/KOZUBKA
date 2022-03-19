@@ -1,0 +1,135 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@inject ua.kozubka.context.Services.Repositories.GeneralRepository.IDesignerRepository _designerRepository
+@{
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+@{
+    var googleCaptchaSiteKey = _settingRepository.Settings.Where(d => d.Key == ua.kozubka.context.Classes.Constants.SettingsOptions.GoogleReCaptchaSiteKey.ToString()).Select(d => d.Value).FirstOrDefault();
+    var siteURL = _designerRepository.GetSiteUrlFull;
+}
+<div class="content-overlay"></div>
+<div class="header-navbar-shadow"></div>
+<div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+        <div class="auth-wrapper auth-basic px-2">
+            <div class="auth-inner my-2">
+                <!-- Login basic -->
+                <div class="card mb-0">
+                    <div class="card-body" id="recoverydiv">
+                        <a asp-controller="Home" asp-action="Index" class="brand-logo">
+
+                            <h2 class="brand-text text-primary ms-1">KOZUBKA.UA</h2>
+                        </a>
+                        <div class="alert alert-danger" role="alert" asp-validation-summary="ModelOnly"></div>
+                        <h4 class="card-title mb-1">Відновлення паролю! 📞</h4>
+                        <p class="card-text mb-2">Будь ласка, напишіть свій номер телефона</p>
+                        <div>
+
+                            <div class="mb-1">
+                                <label for="login-email" class="form-label">Телефон</label>
+                                <input class="form-control text-center" type="tel" name="phone" id="phonerecovery" tabindex="1" autofocus />
+                            </div>
+
+
+                            <input type="hidden" name="captcha" id="captchaInputLogin" value="" />
+                            <button class="btn btn-primary w-100" id="sendotp" tabindex="4">Відновити</button>
+                        </div>
+                        <p class="text-center mt-2">
+                            <a asp-controller="Account" asp-action="Login"> <i data-feather="chevron-left"></i> Повернутись до авторизації </a>
+                        </p>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsDown
+{
+    <script src="~/assets/plugins/jquery.maskplugin/src/jquery.mask.js"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@googleCaptchaSiteKey"></script>
+    <script>
+    grecaptcha.ready(function() {
+        grecaptcha.execute('@googleCaptchaSiteKey', { action: 'contact' }).then(function (token) {
+            $("#captchaInputRegister").val(token);
+            $("#captchaInputLogin").val(token);
+        });
+    });
+    </script>
+    <script type="text/javascript">
+        var options = {
+            placeholder: "+38 (000) 000-0000",
+            onComplete: function (cep) {
+                $("#sendotp").prop("disabled", false);
+            },
+            onKeyPress: function (cep, event, currentField, options) {
+                if ($("#phonerecovery").val().length != 18)
+                    $("#sendotp").prop("disabled", true);
+                else
+                    $("#sendotp").prop("disabled", false);
+            },
+            onChange: function (cep) {
+
+            },
+            onInvalid: function (val, e, f, invalid, options) {
+                $("#sendotp").prop("disabled", true);
+            }
+        };
+
+
+        $(document).ready(function () {
+            $("#phonerecovery").mask("+38 (000) 000-0000", options);
+
+        });
+        $('body').on('click', '#sendotp', function () {
+            var phone = $("#phonerecovery").val();
+            var ajaxdata = { "Phone": phone };
+            $.ajax({
+                url: '/api/accountapi/sendotp',
+                type: 'post',
+                contentType: 'application/json; chartset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(ajaxdata),
+                success: function (result) {
+                    if (result.haveResult) {
+                        $("#recoverydiv").replaceWith(result.htmlString);
+                    }
+                    else {
+                        showNotification('bg-danger-b', result.htmlErrorText, 'top', 'left', 'animated fadeInDown', 'animated fadeOutUp');
+                    }
+                },
+                error: function (jqXHR, exception) {
+                    showNotificationError(jqXHR, exception);
+                }
+            });
+        });
+        $('body').on('click', '#changepass', function () {
+            var phone = $("#phonepartial").val();
+            var optcode = $("#otpcode").val();
+            var ajaxdata = { "Phone": phone, "OTPCode": optcode };
+            $.ajax({
+                url: '/api/accountapi/changepass',
+                type: 'post',
+                contentType: 'application/json; chartset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(ajaxdata),
+                success: function (result) {
+                    if (result.haveResult) {
+                        $(location).attr('href', "@siteURL");
+                    }
+                    else {
+                        showNotification('bg-danger-b', result.htmlErrorText, 'top', 'left', 'animated fadeInDown', 'animated fadeOutUp');
+                    }
+                },
+                error: function (jqXHR, exception) {
+                    showNotificationError(jqXHR, exception);
+                }
+            });
+        });
+    </script>
+
+}

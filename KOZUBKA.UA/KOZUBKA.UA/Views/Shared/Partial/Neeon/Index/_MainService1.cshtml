@@ -1,0 +1,32 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.Directory.IDirectoryServicesCollectionRepository _services
+@{
+    var allServices = _services.DirectoryServicesCollections.Where(d => d.Enabled).ToList();
+}
+<section class="rt-feature-section feature-section-style-1 overflow-hidden" data-bg-image="~/assets/img/elements/element_1.png">
+    <div class="container">
+        <div class="row gutter-24">
+            @foreach (var item in allServices.Where(d => !d.IsAdminService && d.Enabled).OrderBy(d => d.SortOrder))
+            {
+                <div class="col-xl-4 col-md-6 wow fadeInUp" data-wow-delay="200ms" data-wow-duration="800ms">
+                    <div class="rt-post post-sm style-1">
+                        <div class="post-img">
+                            <a href="@item.UrlService">
+                                <img src="~/assets/img/gallery/post-sm_1.jpg" alt="@item.ShotNameService" width="100" height="100">
+                            </a>
+                        </div>
+                        <div class="ms-4 post-content">
+                            <a href="@item.UrlService" class="rt-post-cat-normal">@item.ShotNameService</a>
+                            <h3 class="post-title">
+                                <a href="@item.UrlService">
+                                    @item.DescriptionService
+                                </a>
+                            </h3>
+                           
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>

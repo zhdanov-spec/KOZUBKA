@@ -1,0 +1,126 @@
+﻿@using SlugGenerator
+
+@model ua.kozubka.context.Models.FeedBack
+@inject ua.kozubka.context.Services.Repositories.GeneralRepository.IDesignerRepository _designerRepository
+
+@{
+    var siteURL = _designerRepository.GetSiteUrlFull;
+    var siteName = _designerRepository.GetSiteName;
+    var siteProtocol = _designerRepository.GetSiteProtocol;
+}
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Нове повідомлення для адміністрації на сайті @siteName</title>
+    @{
+        await Html.RenderPartialAsync("MailTemplates/_StyleMail");
+    }
+
+</head>
+<body class="o_body o_bg-white" style="width: 100%;margin: 0px;padding: 0px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;background-color: #ffffff;">
+    @{
+        await Html.RenderPartialAsync("MailTemplates/_HeaderMail");
+    }
+
+    <!-- hero-white-icon-lines -->
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+        <tbody>
+            <tr>
+                <td class="o_bg-white o_px-md o_py-xl o_xs-py-md" align="center" style="background-color: #ffffff;padding-left: 24px;padding-right: 24px;padding-top: 64px;padding-bottom: 64px;">
+                    <!--[if mso]><table width="584" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td align="center"><![endif]-->
+                    <div class="o_col-6s o_sans o_text-md o_text-light o_center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 19px;line-height: 28px;max-width: 584px;color: #82899a;text-align: center;">
+                        <table class="o_center" role="presentation" cellspacing="0" cellpadding="0" border="0" style="text-align: center;margin-left: auto;margin-right: auto;">
+                            <tbody>
+                                <tr>
+                                    <td class="o_bb-primary" height="40" width="32" style="border-bottom: 1px solid #126de5;">&nbsp; </td>
+                                    <td rowspan="2" class="o_sans o_text o_text-secondary o_px o_py" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;color: #424651;padding-left: 16px;padding-right: 16px;padding-top: 16px;padding-bottom: 16px;">
+                                        <img src="@string.Format("{0}/assets/img/mail/notifications-48-primary.png",siteURL)" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;">
+                                    </td>
+                                    <td class="o_bb-primary" height="40" width="32" style="border-bottom: 1px solid #126de5;">&nbsp; </td>
+                                </tr>
+                                <tr>
+                                    <td height="40">&nbsp; </td>
+                                    <td height="40">&nbsp; </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 8px; line-height: 8px; height: 8px;">&nbsp; </td>
+                                    <td style="font-size: 8px; line-height: 8px; height: 8px;">&nbsp; </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h2 class="o_heading o_text-dark o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;color: #242b3d;font-size: 30px;line-height: 39px;">Інформаційне повідомлення!</h2>
+                        <p style="margin-top: 0px;margin-bottom: 0px;">@string.Format("Повідомлення від {0}", Model.UserName)</p>
+                    </div>
+                    <!--[if mso]></td></tr></table><![endif]-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- message_images -->
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+        <tbody>
+            <tr>
+                <td class="o_bg-white o_px-md o_py-xl o_xs-py-md" align="center" style="background-color: #ffffff;padding-left: 24px;padding-right: 24px;padding-top: 64px;padding-bottom: 64px;">
+                    <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
+                    <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
+                        <tbody>
+                            <tr>
+                                <td class="o_bg-white o_px-md o_py-md o_sans o_text o_text-secondary" align="left" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;background-color: #ffffff;color: #424651;padding-left: 24px;padding-right: 24px;padding-top: 24px;padding-bottom: 24px;">
+                                    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+                                        <tbody>
+                                            <tr>
+                                                <td width="48" class="o_bb-light o_text-md o_text-secondary o_sans o_py" align="right" style="vertical-align: top;font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 19px;line-height: 28px;color: #424651;border-bottom: 1px solid #d3dce0;padding-top: 16px;padding-bottom: 16px;">
+                                                    <img class="o_br-max" src="@string.Format("{0}/assets/img/mail/person-48-primary.png",siteURL)" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;border-radius: 96px;">
+                                                </td>
+                                                <td class="o_bb-light o_text o_text-secondary o_sans o_px o_py" align="left" style="vertical-align: top;font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;color: #424651;border-bottom: 1px solid #d3dce0;padding-left: 16px;padding-right: 16px;padding-top: 16px;padding-bottom: 16px;">
+                                                    <p style="margin-top: 0px;margin-bottom: 0px;"><strong class="o_text-dark" style="color: #242b3d;">@Model.UserName</strong><span class="o_text-default o_text-xs" style="font-size: 14px;line-height: 21px;">&nbsp; @Model.Phone @Model.Email</span></p>
+                                                    <p class="o_text-xxs o_text-light" style="font-size: 12px;line-height: 19px;color: #82899a;margin-top: 0px;margin-bottom: 0px;">@Model.ActionTime</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="font-size: 24px; line-height: 24px; height: 24px;">&nbsp; </div>
+                                    <p class="o_mb-xs" style="margin-top: 0px;margin-bottom: 8px;">@Model.Message</p>
+                                    <div style="font-size: 16px; line-height: 16px; height: 16px;">&nbsp; </div>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--[if mso]></td></tr></table><![endif]-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- spacer-lg -->
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+        <tbody>
+            <tr>
+                <td class="o_bg-light o_px-xs" align="center" style="background-color: #dbe5ea;padding-left: 8px;padding-right: 8px;">
+                    <!--[if mso]><table width="632" cellspacing="0" cellpadding="0" border="0" role="presentation"><tbody><tr><td><![endif]-->
+                    <table class="o_block" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 632px;margin: 0 auto;">
+                        <tbody>
+                            <tr>
+                                <td class="o_bg-white" style="font-size: 48px;line-height: 48px;height: 48px;background-color: #ffffff;">&nbsp; </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--[if mso]></td></tr></table><![endif]-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- footer-light -->
+
+    @{
+        await Html.RenderPartialAsync("MailTemplates/_FooterMail");
+    }
+
+
+</body>
+</html>

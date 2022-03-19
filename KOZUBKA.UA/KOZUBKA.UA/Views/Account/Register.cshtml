@@ -1,0 +1,115 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@model ua.kozubka.context.ViewModels.AccountViewModels.AccountViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+@{
+    var googleCaptchaSiteKey = _settingRepository.Settings.Where(d => d.Key == ua.kozubka.context.Classes.Constants.SettingsOptions.GoogleReCaptchaSiteKey.ToString()).Select(d => d.Value).FirstOrDefault();
+}
+<div class="content-overlay"></div>
+<div class="header-navbar-shadow"></div>
+<div class="content-wrapper">
+    <div class="content-header row">
+    </div>
+    <div class="content-body">
+        <div class="auth-wrapper auth-basic px-2">
+            <div class="auth-inner my-2">
+                <!-- Login basic -->
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <a asp-controller="Home" asp-action="Index" class="brand-logo">
+
+                            <h2 class="brand-text text-primary ms-1">KOZUBKA.UA</h2>
+                        </a>
+                        <div class="alert alert-danger" role="alert" asp-validation-summary="ModelOnly"></div>
+                        <h4 class="card-title mb-1">Вітаємо! 👋</h4>
+                        <p class="card-text mb-2">Будь ласка, зареєструйтесь, для отримання повного доступа до сервісів</p>
+
+                        <form method="post" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" class="auth-login-form mt-2">
+
+                            <div class="mb-1">
+                                <label for="login-email" class="form-label">Ім'я</label>
+                                <input type="text" class="form-control text-center" placeholder="Ім'я" asp-for="@Model.RegisterViewModel.UName" required tabindex="1" autofocus />
+                            </div>
+                            <div class="mb-1">
+                                <label for="login-email" class="form-label">Телефон</label>
+                                <input type="text" class="form-control text-center" placeholder="Ім'я" asp-for="@Model.RegisterViewModel.PhoneNumber" required tabindex="2" />
+                            </div>
+                            <div class="mb-1">
+                                <label for="login-email" class="form-label">Email</label>
+                                <input type="text" class="form-control text-center" placeholder="Email" asp-for="@Model.RegisterViewModel.Email" required tabindex="3" />
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="d-flex justify-content-between">
+                                    <label class="form-label">Пароль</label>
+                                   
+                                </div>
+                                <div class="input-group input-group-merge form-password-toggle">
+                                    <input asp-for="@Model.RegisterViewModel.Password" type="password" class="form-control form-control-merge text-center" tabindex="4" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
+                                    <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                                </div>
+                            </div>
+                            <input type="hidden" name="captcha" id="captchaInputRegister" value="" />
+                            <button class="btn btn-primary w-100" type="submit" tabindex="4">Зареєструватись та Увійти</button>
+                        </form>
+
+                        <p class="text-center mt-2">
+                            <span>Вже є зареєстровані?</span>
+                            <a asp-controller="Account" asp-action="Login">
+                                <span>Авторизуйтесь</span>
+                            </a>
+                        </p>
+
+                        @if (Model.ExternalLogins.Count > 0)
+                        {
+
+                            <div class="divider my-2">
+                                <div class="divider-text">або увійдіть за допомогою соціальних мереж</div>
+                            </div>
+                            <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                                <div class="auth-footer-btn d-flex justify-content-center">
+                                    @foreach (var provider in Model.ExternalLogins)
+                                    {
+                                        @if (provider.Name == "Facebook")
+                                        {
+                                            <button type="submit" class="btn btn-facebook" name="provider" value="@provider.Name">
+                                                <i data-feather="facebook"></i>
+                                            </button>
+                                        }
+                                        if (provider.Name == "Google")
+                                        {
+                                            <button type="submit" class="btn btn-google" name="provider" value="@provider.Name">
+                                                <i data-feather="mail"></i>
+                                            </button>
+                                        }
+                                    }
+
+                                </div>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section ScriptsDown
+{
+    <script src="~/assets/plugins/jquery.maskplugin/src/jquery.mask.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=@googleCaptchaSiteKey"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('@googleCaptchaSiteKey', { action: 'contact' }).then(function (token) {
+                $("#captchaInputRegister").val(token);
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#RegisterViewModel_PhoneNumber").mask("+38 (000) 000-0000", { placeholder: "+38 (000) 000-0000" });
+
+        });
+    </script>
+}

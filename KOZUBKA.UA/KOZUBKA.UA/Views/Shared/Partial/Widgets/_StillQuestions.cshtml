@@ -1,0 +1,77 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@inject Wangkanai.Detection.Services.IDetectionService _detectionRepository
+<section class="faq-contact">
+    <div class="row mt-5 pt-75">
+        <div class="col-12 text-center">
+            <h2>Залишились запитання?</h2>
+            <p class="mb-3">
+                Якщо Ви не можете знайти відповід на ваше запитання, Ви можете зв'язатись з нами за контактами нижче. Ми намагатимось відповисти Вам якнайшвидше!
+            </p>
+        </div>
+        @*<div class="col-sm-6">
+            <div class="card text-center faq-contact-card shadow-none py-1">
+                <div class="accordion-body">
+                    <div class="avatar avatar-tag bg-light-primary mb-2 mx-auto">
+                        <i data-feather="phone-call" class="font-medium-3"></i>
+                    </div>
+                    <h4>@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportPhone)</h4>
+                    <span class="text-body">У робочі дні  з 9:00 до 18:00</span>
+                </div>
+            </div>
+        </div>*@
+        <div class="col-sm-6">
+            <div class="card text-center faq-contact-card shadow-none py-1">
+                <div class="accordion-body">
+                    <div class="avatar avatar-tag bg-light-primary mb-2 mx-auto">
+                        <i data-feather="mail" class="font-medium-3"></i>
+                    </div>
+                    <h4>@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportEmail)</h4>
+                    <span class="text-body">Найкращій спосіб для зв'язку!</span>
+                </div>
+            </div>
+        </div>
+        @*<div class="col-sm-4">
+            <div class="card text-center faq-contact-card shadow-none py-1">
+                <div class="accordion-body">
+                    <div class="avatar avatar-tag bg-light-primary mb-2 mx-auto">
+
+                        @if (_detectionRepository.Device.Type == Wangkanai.Detection.Models.Device.Mobile)
+                        {
+                            string viberPhone = _settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportViber);
+                            viberPhone = new string(viberPhone.Where(t => char.IsDigit(t)).ToArray());
+                            <a href="viber://add?number=@viberPhone"><img class="social-icon3" src="~/assets/img/icon/social/Viber.png" /></a> 
+                        }
+                        else
+                        {
+                            <a href="viber://chat?number=@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportViber)"><img class="social-icon3" src="~/assets/img/icon/social/Viber.png" /></a>
+                        }
+                    </div>
+                    <h4>Viber</h4>
+                    
+                </div>
+            </div>
+        </div>*@
+        <div class="col-sm-4">
+            <div class="card text-center faq-contact-card shadow-none py-1">
+                <div class="accordion-body">
+                    <div class="avatar avatar-tag bg-light-primary mb-2 mx-auto">
+                        <a href="tg://resolve?domain=@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportTelegram)"><img class="social-icon3" src="~/assets/img/icon/social/Telegram.png" /></a>
+                    </div>
+                    <h4>Telegram</h4>
+                    
+                </div>
+            </div>
+        </div>
+        @*<div class="col-sm-4">
+            <div class="card text-center faq-contact-card shadow-none py-1">
+                <div class="accordion-body">
+                    <div class="avatar avatar-tag bg-light-primary mb-2 mx-auto">
+                        <a href="whatsapp://send?phone=@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportWhatsApp)"><img class="social-icon3" src="~/assets/img/icon/social/WhatsApp.png" /></a>
+                    </div>
+                    <h4>WatsApp</h4>
+                    <span class="text-body"></span>
+                </div>
+            </div>
+        </div>*@
+    </div>
+</section>

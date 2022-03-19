@@ -1,0 +1,353 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using SlugGenerator
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Directory.IDirectoryServicesCollectionRepository _services
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Ogo.IOgoAdRepository _ogoAdRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Work.IWorkJobRepository _workJobRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepoisitory
+@inject ua.kozubka.context.Services.Repositories.GeneralRepository.IDesignerRepository _designerRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Work.IWorkResumeRepository _workResumeRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.IProductionRepository _productionRepository
+@{ 
+    var allServices = _services.DirectoryServicesCollections.Where(d => d.Enabled).ToList();
+    var fileSite = _settingRepoisitory.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.FileSite);
+
+}
+<div class="content-overlay"></div>
+<div class="header-navbar-shadow"></div>
+<div class="content-wrapper container-xxl p-0">
+
+    <div class="content-body">
+
+        <section class="pt-2">
+            <h1 class="text-center">Русский корабль, иди нах#й</h1>
+        </section>
+        <section class="pt-2">
+            <div class="row">
+                @foreach (var item in allServices.OrderBy(d=>d.SortOrder))
+                {
+                    if (item.IsAdminService)
+                    {
+                        if (User.IsInRole("admin"))
+                        {
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card text-center mb-3">
+                                    <div class="card-body">
+                                        <h4 class="card-title">@item.ShotNameService</h4>
+                                        <p class="card-text">@item.DescriptionService</p>
+                                        <a href="@item.UrlService" class="btn btn-outline-primary">Перейти</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card text-center mb-3">
+                                <div class="card-body">
+                                    <h4 class="card-title">@item.ShotNameService</h4>
+                                    <p class="card-text">@item.DescriptionService</p>
+                                    <a href="@item.UrlService" class="btn btn-outline-primary">Перейти</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                }
+            </div>
+        </section>
+        <section>
+            @{
+                var linkToOgoSite=allServices.Where(d=>d.UrlService.Contains("ogo.")).Select(d=>d.UrlService).FirstOrDefault();
+            }
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-3 col-12 d-none d-sm-block">
+                        <a href="@linkToOgoSite"  rel="dofollow">
+                            <img class="card-img-top img-fluid" src="~/app-assets/images/illustration/sales.svg" alt="Оголошення" />
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title text-center">
+                                <a href="@linkToOgoSite"  rel="dofollow" class="blog-title-truncate text-body-heading">Cервіс оголошень України — купівля/продаж нових та бу товарів</a>
+                            </h4>
+                            <p class="card-text blog-content-truncate">
+                                Безкоштовні приватні оголошення про купівлю-продаж у твоєму місті. Продається все!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <div class="card card-employee-task">
+                            <div class="card-header">
+                                <h4 class="card-title">Нові приватні оголошення</h4>
+                            </div>
+                            <div class="card-body">
+                                @{ 
+                                    var ogo = _ogoAdRepository.OgoAds.Include(d=>d.DirectoryGoodsGroup).Include(d=>d.OgoAdImages.Where(d=>d.Enabled)).Where(d => d.Enabled && d.IsAdminApprove && !d.IsDelete).OrderByDescending(d => d.InsertTime).Take(3).ToList(); 
+                                }
+                                @foreach (var item in ogo)
+                                {
+                                    var linkToOgo = string.Format("{0}/{1}-{2}",allServices.Where(d => d.UrlService.Contains("ogo.")).Select(d => d.UrlService).FirstOrDefault(),item.IdOgoAd,item.OgoAdTitle.GenerateSlug("_"));
+                                    <div class="employee-task d-flex justify-content-between align-items-center" style="margin-bottom:0.5rem">
+                                        <div class="d-flex flex-row">
+                                            <div class="me-75">
+                                                @{ 
+                                                    var imgsrc = "/assets/img/no-image.png";
+                                                    if(item.OgoAdImages.Any())
+                                                    {
+                                                        imgsrc = string.Format("{0}{1}", fileSite, item.OgoAdImages.Select(d => d.AdImage_380_270).FirstOrDefault());
+                                                    }
+                                                }
+                                                <a href="@linkToOgo"  rel="dofollow">
+                                                    <img src="@imgsrc" width="100" height="100" alt="@item.OgoAdTitle" />
+                                                </a>
+                                            </div>
+                                            <div class="my-auto">
+                                                <a href="@linkToOgo"  rel="dofollow"><h3 class="mb-0">@item.OgoAdTitle</h3></a>
+                                                <small>@item.DirectoryGoodsGroup.GoodsGroupName</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            @*@{ 
+                                                var timeAgoPublish = _designerRepository.GetFormatedAgoTime(item.InsertTime);
+                                            }
+                                            <small class="text-muted me-75">@timeAgoPublish тому</small>*@
+                                            <div class="employee-task-chart-primary-1"></div>
+                                        </div>
+                                    </div>
+                                }
+                
+                            </div>
+                            <div class="d-grid p-1">
+                                <a href="@linkToOgoSite"  rel="dofollow" class="btn btn-primary waves-effect waves-float waves-light">Перейти до сайту оголошень</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+        <section>
+            @{
+                var linkToJobSite=string.Format("{0}/search",allServices.Where(d=>d.UrlService.Contains("work.")).Select(d=>d.UrlService).FirstOrDefault());
+            }
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-3 col-12 d-none d-sm-block">
+                        <a href="@linkToJobSite"  rel="dofollow">
+                            <img class="card-img-top img-fluid" src="~/app-assets/images/illustration/sales.svg" alt="Вакаснії" />
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title text-center">
+                                <a href="@linkToJobSite"  rel="dofollow" class="blog-title-truncate text-body-heading">Cервіс вакасній України — пошук нових пропозицій</a>
+                            </h4>
+                            <p class="card-text blog-content-truncate">
+                                Вакаснії, котрі вам потрібні
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <div class="card card-employee-task">
+                            <div class="card-header">
+                                <h4 class="card-title">Нові вакансії</h4>
+                            </div>
+                            <div class="card-body">
+                                @{ 
+                                    var workJob = _workJobRepository.WorkJobs.Include(d=>d.DirectoryProfession).Include(d=>d.WorkEmployer).Where(d => d.Enabled && d.IsAdminApprove && d.WorkEmployer.IsAdminApprove).OrderByDescending(d => d.InsertTime).Take(3).ToList(); 
+                                }
+                                @foreach (var item in workJob)
+                                {
+                                    var linkToWorkJob = string.Format("{0}/job/{1}-{2}",allServices.Where(d => d.UrlService.Contains("work.")).Select(d => d.UrlService).FirstOrDefault(),item.IdWorkJob,item.WorkJobTitle.GenerateSlug("_"));
+                                    <div class="employee-task d-flex justify-content-between align-items-center" style="margin-bottom:0.5rem">
+                                        <div class="d-flex flex-row">
+                                            <div class="me-75">
+                                                @{ 
+                                                    var imgsrc = "/app-assets/images/portrait/small/avatar-s-9.jpg";
+                                                    if(!string.IsNullOrEmpty(item.WorkEmployer.FirmLogo_200_200))
+                                                    {
+                                                        imgsrc = string.Format("{0}{1}", fileSite, item.WorkEmployer.FirmLogo_200_200);
+                                                    }
+                                                }
+                                                <a href="@linkToWorkJob"  rel="dofollow">
+                                                    <img src="@imgsrc" width="100" height="100" alt="@item.WorkJobTitle" />
+                                                </a>
+                                            </div>
+                                            <div class="my-auto">
+                                                <a href="@linkToWorkJob"  rel="dofollow"><h3 class="mb-0">@item.WorkJobTitle</h3></a>
+                                                <small>@item.DirectoryProfession.ProfessionName</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                           @* @{ 
+                                                var timeAgoPublish = _designerRepository.GetFormatedAgoTime(item.InsertTime);
+                                            }
+                                            <small class="text-muted me-75">@timeAgoPublish тому</small>
+                                            <div class="employee-task-chart-primary-1"></div>*@
+                                        </div>
+                                    </div>
+                                }
+                
+                            </div>
+                            <div class="d-grid p-1">
+                                <a href="@linkToJobSite"  rel="dofollow" class="btn btn-primary waves-effect waves-float waves-light">Перейти до сайту вакасній</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+        <section>
+            @{
+                var linkToFoodSite=string.Format("{0}",allServices.Where(d=>d.UrlService.Contains("food.")).Select(d=>d.UrlService).FirstOrDefault());
+            }
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-3 col-12 d-none d-sm-block">
+                        <a href="@linkToFoodSite"  rel="dofollow">
+                            <img class="card-img-top img-fluid" src="~/app-assets/images/illustration/sales.svg" alt="Вакаснії" />
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title text-center">
+                                <a href="@linkToFoodSite"  rel="dofollow" class="blog-title-truncate text-body-heading">Маркетплейс продуктів — краще від фермерів</a>
+                            </h4>
+                            <p class="card-text blog-content-truncate">
+                                Знайдіть українські продукти, та отримайте задоволення від смаку
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <div class="card card-employee-task">
+                            <div class="card-header">
+                                <h4 class="card-title">Нові продукти</h4>
+                            </div>
+                            <div class="card-body">
+                                @{ 
+                                    var foods = _productionRepository.Products.Include(d=>d.ProductGroup).Include(d=>d.Seller).Where(d=>d.Enabled && d.Seller.Enabled && d.IsApprov).OrderByDescending(d => d.InsertTime).Take(3).ToList(); 
+                                }
+                                @foreach (var item in foods)
+                                {
+                                    var linkToFood = string.Format("{0}/product/{1}-{2}",allServices.Where(d => d.UrlService.Contains("food.")).Select(d => d.UrlService).FirstOrDefault(),item.IdProduct,item.ProductName.GenerateSlug("_"));
+                                    <div class="employee-task d-flex justify-content-between align-items-center" style="margin-bottom:0.5rem">
+                                        <div class="d-flex flex-row">
+                                            <div class="me-75">
+                                                @{ 
+                                                    var imgsrc = "/assets/img/no-image.png";
+                                                    if(!string.IsNullOrEmpty(item.Image1_240_240))
+                                                    {
+                                                        imgsrc = string.Format("{0}{1}", fileSite, item.Image1_240_240);
+                                                    }
+                                                }
+                                                <a href="@linkToFood"  rel="dofollow">
+                                                    <img src="@imgsrc" width="100" height="100" alt="@item.ProductName" />
+                                                </a>
+                                            </div>
+                                            <div class="my-auto">
+                                                <a href="@linkToFood"  rel="dofollow"><h3 class="mb-0">@item.ProductName</h3></a>
+                                                <small>@item.ProductGroup.GroupName</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                           @* @{ 
+                                                var timeAgoPublish = _designerRepository.GetFormatedAgoTime(item.InsertTime);
+                                            }
+                                            <small class="text-muted me-75">@timeAgoPublish тому</small>
+                                            <div class="employee-task-chart-primary-1"></div>*@
+                                        </div>
+                                    </div>
+                                }
+                
+                            </div>
+                            <div class="d-grid p-1">
+                                <a href="@linkToFoodSite"  rel="dofollow" class="btn btn-primary waves-effect waves-float waves-light">Перейти до сайту продуктів</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+        <section>
+            @{
+                var linkToCandidateSite=string.Format("{0}/candidates",allServices.Where(d=>d.UrlService.Contains("work.")).Select(d=>d.UrlService).FirstOrDefault());
+            }
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-3 col-12 d-none d-sm-block">
+                        <a href="@linkToCandidateSite"  rel="dofollow">
+                            <img class="card-img-top img-fluid" src="~/app-assets/images/illustration/sales.svg" alt="Вакаснії" />
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title text-center">
+                                <a href="@linkToCandidateSite"  rel="dofollow" class="blog-title-truncate text-body-heading">Cервіс резюме України — нові кандидати</a>
+                            </h4>
+                            <p class="card-text blog-content-truncate">
+                                Шукайте працівника, який вміе те, що Вам потрібно
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-9 col-12">
+                        <div class="card card-employee-task">
+                            <div class="card-header">
+                                <h4 class="card-title">Нові резюме</h4>
+                            </div>
+                            <div class="card-body">
+                                @{ 
+                                    var workCandidate = _workResumeRepository.WorkResumes.Include(d=>d.DirectoryProfession).Where(d => d.Enabled).OrderByDescending(d => d.InsertTime).Take(3).ToList(); 
+                                }
+                                @foreach (var item in workCandidate)
+                                {
+                                    var linkToWorkResume = string.Format("{0}/resume/{1}-{2}",allServices.Where(d => d.UrlService.Contains("work.")).Select(d => d.UrlService).FirstOrDefault(),item.IdWorkResume,item.WorkResumeTitle.GenerateSlug("_"));
+                                    <div class="employee-task d-flex justify-content-between align-items-center" style="margin-bottom:0.5rem">
+                                        <div class="d-flex flex-row">
+                                            <div class="me-75">
+                                                @{ 
+                                                    var imgsrc = "/app-assets/images/portrait/small/avatar-s-9.jpg";
+                                                    if(!string.IsNullOrEmpty(item.ResumeImage_100_100))
+                                                    {
+                                                        imgsrc = string.Format("{0}{1}", fileSite, item.ResumeImage_100_100);
+                                                    }
+                                                }
+                                                <a href="@linkToWorkResume"  rel="dofollow">
+                                                    <img src="@imgsrc" width="100" height="100" alt="@item.WorkResumeTitle" />
+                                                </a>
+                                            </div>
+                                            <div class="my-auto">
+                                                <a href="@linkToWorkResume"  rel="dofollow"><h3 class="mb-0">@item.WorkResumeTitle</h3></a>
+                                                <small>@item.DirectoryProfession.ProfessionName</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                           @* @{ 
+                                                var timeAgoPublish = _designerRepository.GetFormatedAgoTime(item.InsertTime);
+                                            }
+                                            <small class="text-muted me-75">@timeAgoPublish тому</small>
+                                            <div class="employee-task-chart-primary-1"></div>*@
+                                        </div>
+                                    </div>
+                                }
+                
+                            </div>
+                            <div class="d-grid p-1">
+                                <a href="@linkToCandidateSite"  rel="dofollow" class="btn btn-primary waves-effect waves-float waves-light">Перейти до сайту резюме</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>

@@ -1,0 +1,5 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@{
+    var fileSite = _settingRepository.Settings.Where(d => d.Key == ua.kozubka.context.Classes.Constants.SettingsOptions.FileSite.ToString()).Select(d => d.Value).SingleOrDefault();
+}
+<link rel="stylesheet" href="@string.Format("{0}/assets/css/notify.css",fileSite)" />
