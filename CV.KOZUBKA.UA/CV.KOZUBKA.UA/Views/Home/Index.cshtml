@@ -1,0 +1,69 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@{ 
+    var googleCaptchaSiteKey = _settingRepository.Settings.Where(d => d.Key == ua.kozubka.context.Classes.Constants.SettingsOptions.GoogleReCaptchaSiteKey.ToString()).Select(d => d.Value).FirstOrDefault();
+}
+
+@{
+    await Html.RenderPartialAsync("Partial/Home/_About");
+    await Html.RenderPartialAsync("Partial/Home/_Experience");
+    await Html.RenderPartialAsync("Partial/Home/_Skills");
+    await Html.RenderPartialAsync("Partial/Home/_Education");
+    await Html.RenderPartialAsync("Partial/Home/_Services");
+    //await Html.RenderPartialAsync("Partial/Home/_Portfolios");
+    //await Html.RenderPartialAsync("Partial/Home/_Achievement");
+    //await Html.RenderPartialAsync("Partial/Home/_Publications");
+    //await Html.RenderPartialAsync("Partial/Home/_Blog");
+    //await Html.RenderPartialAsync("Partial/Home/_Pricing");
+    await Html.RenderPartialAsync("Partial/Home/_Interest");
+    await Html.RenderPartialAsync("Partial/Home/_Contact");
+}
+@section ScriptsDown{
+
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@googleCaptchaSiteKey"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('@googleCaptchaSiteKey', { action: 'contact' }).then(function (token) {
+                $("#captchaInputLogin").val(token);
+            });
+        });
+    </script>
+    <script>
+         $("form#contact-form").on("submit", function (e) {
+                e.preventDefault();
+                var form = $(this);
+                $("#submit").attr("disabled", "disabled");
+                var post_data = form.serialize();
+                console.log(post_data);
+                $.ajax({ 
+                    type: "POST", 
+                    url: "/api/cvapi/sendemail", 
+                    data: post_data,
+                    success: function (result) {
+                        if (result.haveResult) {
+                             var x = document.getElementById("snackbar");
+                             x.className = "show";
+                             setTimeout(function () {
+                                 x.className = x.className.replace("show", "");
+                             }, 3000);
+                             $("form#contact-form")[0].reset();
+                             Materialize.updateTextFields();
+                             $("#submit").removeAttr("disabled", "disabled");
+                        } else {
+                            var y = document.getElementById("fail-snackbar");
+                            y.className = "show";
+                            setTimeout(function () {
+                                y.className = y.className.replace("show", "");
+                            }, 3000);
+                            $("form#contact-form")[0].reset();
+                            Materialize.updateTextFields();
+                            $("#submit").removeAttr("disabled", "disabled");
+                        }
+
+                    },
+                });
+                    
+            });
+    </script>
+
+}

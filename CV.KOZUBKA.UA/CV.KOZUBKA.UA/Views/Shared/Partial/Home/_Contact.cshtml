@@ -1,0 +1,79 @@
+﻿
+<section id="contact" class="section">
+    <h4 class="text-uppercase text-center">Контакти</h4>
+    <div class="container">
+        <div class="row">
+            <div class="col col-md-5 col-sm-6 col-xs-12">
+                <div class="info card">
+                    <ul class="text-center center-block" data-aos="fade" data-aos-delay="200" data-aos-offset="0">
+                        <li>
+                            <i class="ion-help center-block"></i>
+                            <span>
+                                Если у Вас есть предложения или вопросы вы можете задать их с помощью этой формы. 
+                                Я всегда готов рассмотреть вопросы по сотрудничеству
+                            </span>
+                        </li>
+                    </ul>
+                    
+                   @* <ul class="text-center center-block" data-aos="fade" data-aos-delay="200" data-aos-offset="0">
+                        <li>
+                            <i class="ion-android-call center-block"></i>
+                            <span>+880 - 12345 - 67890</span>
+                        </li>
+                        <li>
+                            <i class="ion-ios-printer center-block"></i>
+                            <span>+880 - 12345 - 67890</span>
+                        </li>
+                        <li>
+                            <i class="ion-email center-block"></i>
+                            <span>emailid@domain.com</span>
+                        </li>
+                        <li>
+                            <i class="ion-earth center-block"></i>
+                            <span>websiteaddresslink.com</span>
+                        </li>
+                        <li>
+                            <i class="ion-ios-location center-block"></i>
+                            <span>25/A New Eskaton Road, Maghbazar</span>
+                        </li>
+                    </ul>*@
+                </div>
+            </div>
+            <div class="col col-md-7 col-sm-6 col-xs-12">
+                <div  class="contact card">
+
+                    <form id="contact-form" name="contact-form" role="form">
+                        <div class="input-field">
+                            <input  id="name" name="name" type="text" class="validate" required>
+                            <label for="name">Ваше Имя</label>
+                        </div>
+                        <div class="input-field">
+                            <input id="subject" name="subject" type="text" class="validate" required>
+                            <label for="subject">Тема</label>
+                        </div>
+                        <div class="input-field">
+                            <input id="email" name="email" type="email" class="validate" required>
+                            <label for="email">Ваш Email</label>
+                        </div>
+                        <div class="input-field">
+                            <textarea id="textarea" name="message" class="materialize-textarea" required></textarea>
+                            <label for="textarea">Сообщение</label>
+                        </div>
+                        <div class="row">
+                            <div class="col col-md-12 col-sm-12 col-xs-12 text-center">
+                                <button type="submit" id="submit" name="submit-data" value="Submit" class="btn waves-effect waves-light btn-primary custom-btn">
+                                    <i class="ion-ios-paperplane"></i>Отправить
+                                </button>
+                            </div>
+                             <input type="hidden" name="captcha" id="captchaInputLogin" value="" />
+                            <div id="snackbar">Сообщение отправлено</div>
+                            <div id="fail-snackbar">Что то пошло не так, попробуйте позже</div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+      
+    </div>
+</section>
