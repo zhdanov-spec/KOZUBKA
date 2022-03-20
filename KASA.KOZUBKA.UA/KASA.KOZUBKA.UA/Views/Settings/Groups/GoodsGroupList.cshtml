@@ -1,0 +1,56 @@
+﻿@model IList<ua.kozubka.context.ViewModels.GeneralViewModels.RroGoodsGroupMenuViewModel>
+@section ScriptsTop
+{
+    <link rel="stylesheet" href="~/assets/plugins/nestable/jquery-nestable.css">
+}    
+<div class="top-products-area py-3">
+    <div class="container">
+        <div class="section-heading d-flex align-items-center justify-content-between">
+            <h6></h6>
+        </div>
+        <a class="btn btn-warning btn-lg w-100 mb-2" asp-controller="Settings" asp-action="GoodsGroupListEdit">Створити Групу</a>
+        <div class="product-catagories">
+            <div class="dd">
+                @{await Html.RenderPartialAsync("_GoodsGroupListTree.cshtml", Model);}
+            </div>
+            <textarea id="restructuredid" cols="30" rows="3" class="form-control no-resize d-none" name="structure" readonly></textarea>
+        </div>
+    </div>
+</div>
+@section ScriptsDown
+{
+    <script src="~/assets/plugins/nestable/jquery.nestable.js"></script> 
+    <script>
+        $(function () {
+            $('.dd').nestable();
+            //$('.dd').nestable('collapseAll');
+            $('.dd').on('change', function () {
+                var $this = $(this);
+                var serializedData = window.JSON.stringify($($this).nestable('serialize'));
+                $("#restructuredid").val(serializedData);
+
+                var ajaxdata={
+                    "Struct":serializedData
+                };
+                $.ajax({
+                    url: '/api/rrogroupapi/PostGroupStructure',
+                    type: "post",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(ajaxdata),
+                    success: function (result) {
+                        if (result.haveResult) {
+                            $("#EducationList").append(result.htmlString);
+                            $(".select-site.select-edu-needinsert").select2({
+                                minimumResultsForSearch: Infinity,
+                                placeholder: "Оберіть один з варіантів",
+                                language: "uk",
+                            });
+                            $('.select-site.select-edu-needinsert').removeClass('select-edu-needinsert');
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+}    

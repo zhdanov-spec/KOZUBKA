@@ -1,0 +1,40 @@
+﻿@model int
+
+<div class="container py-3">
+    <div class="section-heading d-flex align-items-center justify-content-between">
+        <h6></h6>
+    </div>
+    <div id="chekDetail">
+
+    </div>
+    
+    
+    
+</div>
+@section ScriptsDown
+{
+    <script>
+        $(document).ready(function () {
+            GetCheck(@Model);
+        });
+        function GetCheck(idCheck)
+        {
+            var ajaxdata={"IdCheck":idCheck};
+            $.ajax({
+                url: '/api/rroreportsapi/getcheck',
+                type: "post",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ajaxdata),
+                success: function (result) {
+                    if (result.haveResult) {
+                        $("#chekDetail").html(result.htmlString);
+                    }
+                    if (result.hideButton) {
+                        $("#loadMore").css("display", "none");
+                    }
+                },
+            });
+        }
+    </script>
+}

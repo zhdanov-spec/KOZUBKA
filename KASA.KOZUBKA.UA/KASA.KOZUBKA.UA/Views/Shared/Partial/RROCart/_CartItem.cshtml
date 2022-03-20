@@ -1,0 +1,23 @@
+﻿@model ua.kozubka.context.ViewModels.RROViewModels.ShopViewModels.RROCartViewModel
+<tr id="tr-IdRroGoodsItem-@Model.DirectoryRroGoodsItem.IdRroGoodsItem">
+    <th scope="row"><a class="remove-product" data-IdRroGoodsItem="@Model.DirectoryRroGoodsItem.IdRroGoodsItem" href="#"><i class="lni lni-close"></i></a></th>
+    <td><img class="rounded" src="~/assets/img/product/no-image-view-board.png" alt=""></td>
+    <td>
+        <a href="#">@Model.DirectoryRroGoodsItem.ItemName
+            <span>@string.Format("{0} × {1} = {2}",Model.RROCartPosition.Price,Model.RROCartPosition.Count,Model.RROCartPosition.Summa) </span>
+            @if(Model.RROCartPosition.DiscountSum>0)
+            {
+                <span>Знижка: @Model.RROCartPosition.DiscountSum</span>
+            }
+            <b>Усього: @(Model.RROCartPosition.Summa-Model.RROCartPosition.DiscountSum)</b>
+        </a>
+        <a class="btn btn-warning w-100 mt-2 select-discount-button" data-discountSum="@Model.RROCartPosition.DiscountSum"  data-idRROGoodsItem="@Model.DirectoryRroGoodsItem.IdRroGoodsItem" data-itemName="@Model.DirectoryRroGoodsItem.ItemName"  style="font-size: 0.9em;color:white" href="#">Встановити знижку</a>
+    </td>
+    <td>
+        <div class="quantity def-number-input" style="flex-direction: column;display: flex;align-items: center;">
+            <button style="width:4rem;height:2rem;border:1px solid #968c8c" class="mb-1 minus classmainchange  btn btn-danger"  data-IdRroGoodsItem="@Model.DirectoryRroGoodsItem.IdRroGoodsItem" onclick="this.parentNode.querySelector('input[type=number]').stepDown()"><i class="lni lni-minus"></i></button>
+            <input style="width:4rem;appearance: textfield;" class="qty-text" min="0" type="number" value="@Model.RROCartPosition.Count" disabled />
+            <button style="width:4rem;height:2rem;border:1px solid #968c8c" class="mt-1 plus classmainchange btn btn-success" data-IdRroGoodsItem="@Model.DirectoryRroGoodsItem.IdRroGoodsItem" onclick="this.parentNode.querySelector('input[type=number]').stepUp()"><i class="lni lni-plus"></i></button>
+        </div>
+    </td>
+</tr>    

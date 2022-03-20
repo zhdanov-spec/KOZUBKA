@@ -1,0 +1,96 @@
+﻿@model ua.kozubka.context.ViewModels.RROViewModels.ShopViewModels.RROInfoSearchModel
+<div class="top-products-area py-3">
+<div class="container">
+    <div class="section-heading d-flex align-items-center justify-content-between">
+    <h6></h6>
+    </div>
+    <div class="product-catagories">
+        <div class="row g-3" id="rrogroupList">          
+        </div>
+    </div>
+    <div class="row g-3" id="rroItemList">
+  
+   
+    </div>
+</div>
+</div>
+@section ScriptsDown
+{
+    <script>
+        $(document).on('click', 'a[href="#"]', function (e) {
+            e.preventDefault ? e.preventDefault() : e.returnValue = false;
+        });
+    </script>
+    <script>
+        var idRroGoodsGroup=@(Model.IdRroGoodsGroup.HasValue?Model.IdRroGoodsGroup.Value:0);
+        $(document).ready(function (){
+            GetRROGroup();
+            GetRROGoodItem(false);
+        });
+        $('body').on('click', '.rro-group-link', function () {
+            idRroGoodsGroup = parseInt($(this).attr('data-idRroGoodsGroup'));
+            GetRROGroup();
+            GetRROGoodItem(true);
+        });
+        $('body').on('click', '.add-item-to-cart', function() {
+            var idRroGoodsItem= $(this).attr("data-id");
+            var ajaxdata = { "IdRroGoodsItem": idRroGoodsItem};
+            $.ajax({
+                url: '/api/rrocartapi/addcart',
+                type: "post",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ajaxdata),
+                success: function (result) {
+                    if (result.haveResult) {
+                       $("#rro-cart").replaceWith(result.htmlString);
+                    }
+                },
+            });
+        });
+        function GetRROGroup(){
+            var ajaxdata={"IdRroGoodsGroup":idRroGoodsGroup};
+            $.ajax({
+                url: '/api/rrogroupapi/GetRROGroup',
+                type: "post",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ajaxdata),
+                success: function (result) {
+                    if (result.haveResult) {
+                        $("#rrogroupList").html(result.htmlString);
+                    }
+                },
+            });
+        }
+        function GetRROGoodItem(replace)
+        {
+            var ajaxdata={
+                "IsEdit":false,
+                "IdRroGoodsGroup":idRroGoodsGroup
+            };
+            $.ajax({
+                url: '/api/rroitemapi/getrroitem',
+                type: "post",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ajaxdata),
+                success: function (result) {
+
+                    if (result.haveResult) {
+                        if (replace) {
+                            $("#rroItemList").html(result.htmlString);
+                        }
+                        else {
+                            $("#rroItemList").append(result.htmlString);
+                        }
+                    }
+                    if (result.hideButton) {
+                        $("#loadMore").css("display", "none");
+                    }
+                },
+            });
+        }
+    </script>
+}
+    

@@ -1,0 +1,131 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.Directory.IDirectoryServicesCollectionRepository _services
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+@inject ua.kozubka.context.Services.Repositories.GeneralRepository.IDesignerRepository _designerRepository
+@{
+  var allServices = _services.DirectoryServicesCollections.Where(d => d.Enabled).ToList();
+  var loginPage = _settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.LoginFullPage);
+  loginPage = string.Format("{0}{1}", loginPage, _designerRepository.FullAppBaseUrl);
+}
+<div class="container">
+    <div class="support-wrapper py-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="faq-heading text-center">Питання, які часто ставляться(FAQ)</h4>
+            </div>
+        </div>        
+        <div class="accordian-area-wrapper mt-3">
+            <div class="card accordian-card">
+                <div class="card-body">
+                    <h5 class="accordian-title">Загальні питання</h5>
+                    <div class="accordion" id="accordion1">
+                        <div class="accordian-header" id="heading1-1">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1-1" aria-expanded="false" aria-controls="collapse1-1"><span><i class="lni lni-bi-cycle"></i>Для чого це потрібно?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse1-1" aria-labelledby="heading1-1" data-bs-parent="#accordion1">
+                            <p>Для систематизації каталогу продукції або послуг, та, якщо потрібно, для реєстрації продажу.</p>
+                        </div>
+                        <div class="accordian-header" id="heading1-2">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1-2" aria-expanded="false" aria-controls="collapse1-2"><span><i class="lni lni-cart-full"></i>Скільки коштує?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse1-2" aria-labelledby="heading1-2" data-bs-parent="#accordion1">
+                            <p>Усі сервсіси від KOZUBKA - безкоштовні.</p>
+                        </div>
+                        <div class="accordian-header" id="heading1-3">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1-3" aria-expanded="false" aria-controls="collapse1-3"><span><i class="lni lni-cart-full"></i>З чого почати?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse1-3" aria-labelledby="heading1-3" data-bs-parent="#accordion1">
+                            <p>Якщо Ви зареєстровані на сайті 
+                                @foreach (var item in allServices.Where(d => d.Enabled && !d.IsAdminService).OrderBy(d => d.SortOrder))
+                                {
+                                    <a rel="dofollow" href="@item.UrlService" target="_blank">@item.ShotNameService </a>
+                                }
+                                Ви вже можете створювати свій довідник товарів та послуг. Якщо у ні - пройдіть легку <a href="@loginPage">реєстрацію</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordian-area-wrapper mt-3">
+            <div class="card accordian-card">
+                <div class="card-body">
+                    <h5 class="accordian-title">Робота з довідниками</h5>
+                    <div class="accordion" id="accordion2">
+                        <div class="accordian-header" id="heading2-1">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2-1" aria-expanded="false" aria-controls="collapse2-1"><span><i class="lni lni-bi-cycle"></i>Як додати групу товарів?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse2-1" aria-labelledby="heading2-1" data-bs-parent="#accordion2">
+                            <ul>
+                                <li><p class="mt-3">1. Відкрийте меню сайта</p><img src="~/assets/img/faq/1.png"  /></li>
+                                <li><p class="mt-3">2. Розкрийте пункт "Номенклатура" </p><img src="~/assets/img/faq/2.png"  /></li>
+                                <li><p class="mt-3">3. Оберіть пункт "Групи товарів" </p><img src="~/assets/img/faq/3.png"  /></li>
+                                <li><p class="mt-3">4. Натисніть кнопку "Створити Групу" </p><img src="~/assets/img/faq/4.png"  /></li>
+                                <li><p class="mt-3">5. Заповніть поле "Назва групи", встановіть активність та натисните кнопку "Зберегти" </p><img src="~/assets/img/faq/5.png"  /></li>
+                            </ul>
+                        </div>
+                        <div class="accordian-header" id="heading2-2">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2-2" aria-expanded="false" aria-controls="collapse2-2"><span><i class="lni lni-cart-full"></i>Як Редагувати групи товарів?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse2-2" aria-labelledby="heading2-2" data-bs-parent="#accordion2">
+                            <p><p class="mt-3">Зайдіть в пункт "Номеклатура", оберіть пункт "Групи товарів". Натисніть кнопку "Редагувати" для змінення інформації про групу товарів </p><img src="~/assets/img/faq/6.png"  /></p>
+                        </div>
+                        <div class="accordian-header" id="heading2-3">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2-3" aria-expanded="false" aria-controls="collapse2-3"><span><i class="lni lni-cart-full"></i>Як сортувати групи?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse2-3" aria-labelledby="heading2-3" data-bs-parent="#accordion2">
+                            <p><p class="mt-3">Зайдіть в пункт "Номеклатура", оберіть пункт "Групи товарів". Утримуючи необхідну группу перенесіть ії в інше місце</p><img src="~/assets/img/faq/7.png"  /></p>
+                        </div>
+                        <div class="accordian-header" id="heading2-4">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2-4" aria-expanded="false" aria-controls="collapse2-4"><span><i class="lni lni-cart-full"></i>Як додавати товар</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse2-4" aria-labelledby="heading2-4" data-bs-parent="#accordion2">
+                            <ul>
+                                <li><p class="mt-3">1. Відкрийте меню сайта</p><img src="~/assets/img/faq/1.png"  /></li>
+                                <li><p class="mt-3">2. Розкрийте пункт "Номенклатура" </p><img src="~/assets/img/faq/2.png"  /></li>
+                                <li><p class="mt-3">3. Оберіть пункт "Товарів" </p><img src="~/assets/img/faq/8.png"  /></li>
+                                <li><p class="mt-3">4. Натисніть кнопку "Додати Продукт/Послугу" </p><img src="~/assets/img/faq/9.png"  /></li>
+                                <li><p class="mt-3">5. Заповніть заповніть усі поля та натисните кнопку "Зберегти" </p><img src="~/assets/img/faq/10.png"  /></li>
+                            </ul>
+                        </div>
+                         <div class="accordian-header" id="heading2-5">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2-5" aria-expanded="false" aria-controls="collapse2-5"><span><i class="lni lni-cart-full"></i>Як редагувати товар?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse2-5" aria-labelledby="heading2-5" data-bs-parent="#accordion2">
+                            <p class="mt-3">Зайдіть в пункт "Номеклатура", оберіть пункт "Товари". На обраном товарі натисніть кнопку "Редагувати"</p><img src="~/assets/img/faq/11.png"  />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+          <div class="accordian-area-wrapper mt-3">
+            <div class="card accordian-card">
+                <div class="card-body">
+                    <h5 class="accordian-title">Налаштування ПРРО</h5>
+                    <div class="accordion" id="accordion3">
+                        <div class="accordian-header" id="heading3-1">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3-1" aria-expanded="false" aria-controls="collapse3-1"><span><i class="lni lni-bi-cycle"></i>З якими сервісами ПРРО можна працювати?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse3-1" aria-labelledby="heading3-1" data-bs-parent="#accordion3">
+                            <p>На даний час ви маєте змогу робити продажі без використання ПРРО, в цьому випадку у вас буде лише статистика по вашим продажам, або використовувати сервіс ПРРО <a target="_blank" href="https://my.checkbox.ua/auth/registration?partner_ref=hdqPatJKJn">checkbox.ua</a>. При використанні сервсісу checkbox автоматично будуть генеруватися фіскальні чеки продажу.</p>
+                        </div>
+                        <div class="accordian-header" id="heading3-2">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3-2" aria-expanded="false" aria-controls="collapse3-2"><span><i class="lni lni-bi-cycle"></i>А можна без РРО?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse3-2" aria-labelledby="heading3-2" data-bs-parent="#accordion3">
+                            <p>Звичайно можно. В цьому випадку оберіть Пункт "Без ПРРО" у меню "Сервіси ПРРО".</p><img src="~/assets/img/faq/12.png"  />
+                        </div>
+                        <div class="accordian-header" id="heading3-3">
+                            <button class="d-flex align-items-center justify-content-between w-100 collapsed btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3-3" aria-expanded="false" aria-controls="collapse3-3"><span><i class="lni lni-bi-cycle"></i>Що подтрібно для підлкючення ПРРО checkbox.ua?</span><i class="lni lni-chevron-right"></i></button>
+                        </div>
+                        <div class="collapse" id="collapse3-3" aria-labelledby="heading3-3" data-bs-parent="#accordion3">
+                            <p>Для початку вам потрібна реєстрація на сайті <a href="https://my.checkbox.ua/auth/registration?partner_ref=hdqPatJKJn">checkbox.ua</a>. Після реєстрації, створіть підприємство, касу так касира в checkbox. Завантажте ключ підпису касира на сервіс checkbox </p>
+                            <p>Оберіть пункт CHECKBOX.UA у меню "Сервіси ПРРО"</p>
+                            <p>Нажміть кнопку "Налаштувати" та введіть налаштування касси та касира які ви отримали на сервісі <a href="https://my.checkbox.ua/auth/registration?partner_ref=hdqPatJKJn">checkbox.ua</a></p><img src="~/assets/img/faq/13.png"  />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

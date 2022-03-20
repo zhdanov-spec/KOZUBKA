@@ -1,0 +1,43 @@
+﻿@model ua.kozubka.context.Models.Directory.DirectoryRroGoodsGroup
+<div class="container">
+
+    <div class="profile-wrapper-area py-3">
+
+        <div class="card user-info-card">
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="user-info">
+                    <h5 class="mb-0">Додавання Нової Групи</h5>
+                    
+                </div>
+                
+            </div>
+        </div>
+        <div class="card user-data-card">
+            
+            <div class="card-body">
+                <form asp-action="GoodsGroupListEdit" asp-controller="Settings">
+                    <div class="title mb-2 text-danger" asp-validation-summary="ModelOnly"></div>
+                    <input asp-for="@Model.IdRroGoodsGroup" type="hidden" />
+                    <div class="mb-3">
+                        <div class="title mb-2"><i class="lni lni-cart"></i><span>Назва групи</span></div>
+                        <input class="form-control" type="text" asp-for="@Model.GroupName">
+                    </div>
+                    <div class="single-settings d-flex align-items-center justify-content-between">
+                        <div class="title"><i class="lni lni-checkmark"></i><span>Активна?</span></div>
+                        <div class="data-content">
+                            <div class="toggle-button-cover">
+                                <div class="button r">
+                                    <input class="checkbox" type="checkbox" asp-for="@Model.Enabled">
+                                    <div class="knobs"></div>
+                                    <div class="layer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-success w-100 mt-3" type="submit">Зберегти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

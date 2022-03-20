@@ -1,0 +1,23 @@
+﻿@model ua.kozubka.context.ViewModels.RROViewModels.ShopViewModels.RROItemModel
+<div class="col-12 col-md-6">
+    <div class="card horizontal-product-card">
+        <div class="card-body d-flex align-items-center">
+            <div class="product-thumbnail-side">
+                <a class="product-thumbnail d-block" href="#"><img src="~/assets/img/product/no-image-view-board.png" alt=""></a>
+            </div>
+            <div class="product-description">
+                <a class="product-title d-block" href="single-product.html">@Model.DirectoryRroGoodsItem.ItemName</a>
+                <p class="sale-price"><i class="lni lni-dollar"></i>@String.Format("{0}грн",Model.DirectoryRroGoodsItem.Price)</p>
+                @if(Model.IsEdit)
+                {
+                    <a class="btn btn-danger btn-sm" asp-controller="Settings" asp-action="GoodsItemListEdit" asp-route-idRroGoodsItem="@Model.DirectoryRroGoodsItem.IdRroGoodsItem"><i class="me-1 lni lni-cart"></i>Редагувати</a>
+                }
+                else
+                {
+                    <a class="btn btn-danger btn-sm add-item-to-cart" data-id="@Model.DirectoryRroGoodsItem.IdRroGoodsItem"><i class="me-1 lni lni-cart"></i>Додати До Чеку</a>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

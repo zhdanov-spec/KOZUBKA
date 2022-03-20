@@ -1,0 +1,75 @@
+﻿<div class="container">
+    <div class="profile-wrapper-area py-3">
+        <div class="card user-info-card">
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="user-info">
+                    <h5 class="mb-0 text-white">Зміна</h5>
+                </div>
+            </div>
+        </div>
+        <div class="card user-data-card">
+            <div class="card-body" id="smenaInfo">
+                
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsDown
+{
+    <script>
+        $(document).on('click', 'a[href="#"]', function (e) {
+            e.preventDefault ? e.preventDefault() : e.returnValue = false;
+        });
+    </script>
+    <script>
+        
+        $(document).ready(function (){
+            GetSmenaInfo();
+            
+        });
+        
+        function GetSmenaInfo(){
+            $.ajax({
+                url: '/api/rrosmenaapi/getsmenainfo',
+                type: "get",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                cache:false,
+                success: function (result) {
+                    if (result.haveResult) {
+                        $("#smenaInfo").html(result.htmlString);
+                    }
+                },
+            });
+        }
+        function GetRROGoodItem(replace)
+        {
+            var ajaxdata={
+                "IsEdit":false,
+                "IdRroGoodsGroup":idRroGoodsGroup
+            };
+            $.ajax({
+                url: '/api/rroitemapi/getrroitem',
+                type: "post",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ajaxdata),
+                success: function (result) {
+
+                    if (result.haveResult) {
+                        if (replace) {
+                            $("#rroItemList").html(result.htmlString);
+                        }
+                        else {
+                            $("#rroItemList").append(result.htmlString);
+                        }
+                    }
+                    if (result.hideButton) {
+                        $("#loadMore").css("display", "none");
+                    }
+                },
+            });
+        }
+    </script>
+}
+    

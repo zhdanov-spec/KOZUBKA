@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ua.kozubka.context.ViewModels.GeneralViewModels.RroGoodsGroupMenuViewModel>
+<ol class="dd-list">
+    @foreach (var menu in Model.OrderBy(m => m.SortOrder))
+    {
+        <li class="dd-item" data-id="@menu.IdRroGoodsGroup" data-sortOrder="@menu.SortOrder">
+
+            <div class="dd-handle">
+                 <div class="single-settings d-flex align-items-center justify-content-between">
+                        <div class="title"><i class="lni lni-checkmark"></i><span>@menu.GroupName</span></div>
+                        <div class="data-content">
+                            <a class="btn btn-warning dd-nodrag" asp-controller="settings" asp-action="GoodsGroupListEdit" asp-route-idRroGoodsGroup="@menu.IdRroGoodsGroup">РЕДАГУВАТИ</a>
+                        </div>
+                    </div>
+                    
+                
+            </div>
+            @if (menu.Children.Any())
+            {
+                await Html.RenderPartialAsync("_GoodsGroupListTree.cshtml", menu.Children);
+            }
+        </li>
+
+    }
+</ol>

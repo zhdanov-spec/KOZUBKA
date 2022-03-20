@@ -1,0 +1,135 @@
+﻿@model ua.kozubka.context.ViewModels.RROViewModels.ShopViewModels.RROItemModel
+
+<div class="container">
+
+    <div class="profile-wrapper-area py-3">
+
+        <div class="card user-info-card">
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="user-info">
+                    <h5 class="mb-0">Додавання Нового Продукта/Послуги</h5>
+                    
+                </div>
+                
+            </div>
+        </div>
+        <div class="card user-data-card">
+            <div class="card-body">
+                <form asp-action="GoodsItemListEdit" asp-controller="Settings">
+                    <div class="title mb-2 text-danger" asp-validation-summary="All"></div>
+                    <input asp-for="@Model.DirectoryRroGoodsItem.IdRroGoodsItem" type="hidden" />
+                    <div class="mb-3">
+                        <div class="title mb-2"><i class="lni lni-cart"></i><span>Назва товара/послуги</span></div>
+                        <input class="form-control" type="text" asp-for="@Model.DirectoryRroGoodsItem.ItemName">
+                    </div>
+                    <div class="mb-3">
+                        <div class="title mb-2"><i class="lni lni-archive"></i><span>Група товара/послуги</span></div>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center justify-content-between">
+                        <input asp-for="@Model.IdRroGoodsGroup" hidden class="IdRROGoodsGroupInput" />
+                        <h5 class="total-price mb-0"><span id="rrogoodcategoryname">@(Model.IdRroGoodsGroup==0?"Не обрана":Model.DirectoryRroGoodsItem.DirectoryRroGoodsGroup.GroupName)</span></h5>
+                        <a id="linkmodal" class="btn btn-primary  w-30" data-bs-toggle="modal" data-bs-target="#RROGroupModal">@(Model.IdRroGoodsGroup==0?"Встановити":"Змінити")</a>
+                    </div>
+                    <div class="mb-3">
+                        <div class="title mb-2"><i class="lni lni-dollar"></i><span>Ціна</span></div>
+                        <input class="form-control price-input" type="text" asp-for="@Model.DirectoryRroGoodsItem.Price" placeholder="0,00">
+                    </div>
+                    <div class="single-settings d-flex align-items-center justify-content-between">
+                        <div class="title"><i class="lni lni-checkmark"></i><span>Активна?</span></div>
+                        <div class="data-content">
+                            <div class="toggle-button-cover">
+                                <div class="button r">
+                                    <input class="checkbox" type="checkbox" asp-for="@Model.DirectoryRroGoodsItem.Enabled">
+                                    <div class="knobs"></div>
+                                    <div class="layer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-success w-100 mt-3" type="submit">Зберегти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="RROGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Оберіть групу</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="product-catagories">
+                    <div class="row g-3" id="rrogroupList">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning w-100" data-bs-dismiss="modal">Скасувати</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsDown
+{
+     <script src="~/assets/plugins/jquery.maskplugin2/dist/jquery.mask.min.js"></script>
+     <script>
+        $(document).on('click', 'a[href="#"]', function (e) {
+            e.preventDefault ? e.preventDefault() : e.returnValue = false;
+        });
+    </script>
+    <script>
+        
+        $(document).ready(function (){
+            $(".price-input").mask("0999999,09", { reverse: false });
+            @if(Model.IdRroGoodsGroup==0)
+            {
+                @:GetRROGroup();
+            }
+            else
+            {
+                @:GetRROGroup();
+                
+            }
+        });
+        $('body').on('click', '.rro-group-link', function () {
+            var idRroGoodsGroup = parseInt($(this).attr('data-idRroGoodsGroup'));
+            var isBack = $(this).attr('data-isback');
+            var isSelect = $(this).attr('data-isselect');
+            var RROGoodsGroupName = $(this).attr('data-rrogoodsgroupname');
+             GetRROGroup(idRroGoodsGroup, isBack, isSelect, RROGoodsGroupName);
+        });
+        function GetRROGroup(idRroGoodsGroup, isBack, isSelect, RROGoodsGroupName){
+            
+            if(isSelect=="true")
+            {
+                $("#RROGroupModal").modal('hide');
+                $("#rrogoodcategoryname").text(RROGoodsGroupName);
+                $("#linkmodal").text("Змінити")
+                $(".IdRROGoodsGroupInput").val(idRroGoodsGroup);
+                
+
+            }
+            var ajaxdata={"IdRroGoodsGroup":idRroGoodsGroup, "IsBack": isBack};
+             $.ajax({
+                url: '/api/rrogroupapi/getrrogroupmodal',
+                type: "post",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(ajaxdata),
+                success: function (result) {
+                    if (result.haveResult) {
+                        $("#rrogroupList").html(result.htmlString);
+                    }
+
+                },
+            });
+        }
+    </script>
+}
+    

@@ -1,0 +1,40 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settingRepository
+<div class="container">
+    <div class="checkout-wrapper-area py-3">
+        <div class="choose-payment-method">
+            <h6 class="mb-3 text-center">Оберіть спосіб звязку за нами</h6>
+            <div class="row justify-content-center g-3">
+                <div class="col-12 col-md-12">
+                    <div class="single-payment-method"><a class="credit-card" href="mailto:@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportEmail)">
+                        <i class="mb-3 text-dark lni lni-envelope"></i>
+                        <h6>@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportEmail)</h6></a>
+                    </div>
+                </div>
+                <div class="col-12 col-md-12">
+                    <div class="single-payment-method"><a class="credit-card" href="@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.ContactLink)">
+                        <i class="mb-3 text-dark lni lni-support"></i>
+                        <h6>Форма Зворотнього зв'язку</h6></a>
+                    </div>
+                </div>
+                @if(!string.IsNullOrEmpty(_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportTelegram)))
+                {
+                    <div class="col-12 col-md-12">
+                        <div class="single-payment-method"><a class="credit-card" href="tg://resolve?domain=@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.SupportTelegram)">
+                            <i class="mb-3 text-dark lni lni-telegram"></i>
+                            <h6>Telegram</h6></a>
+                        </div>
+                    </div>
+                }
+                @if(!string.IsNullOrEmpty(_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.FacebookUrl)))
+                {
+                    <div class="col-12 col-md-12">
+                        <div class="single-payment-method"><a class="credit-card" href="@_settingRepository.GetSetting(ua.kozubka.context.Classes.Constants.SettingsOptions.FacebookUrl)">
+                            <i class="mb-3 text-dark lni lni-facebook"></i>
+                            <h6>Facebook</h6></a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

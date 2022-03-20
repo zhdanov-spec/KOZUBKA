@@ -1,0 +1,2 @@
+﻿@model ua.kozubka.context.Models.RRO.RROCheck
+<li><a asp-controller="Reports" asp-action="CheckDetail" asp-route-IdCheck="@Model.IdRROCheck">Час Продажу-@Model.CheckTime.ToShortTimeString(), Сума-@Model.CheckSum <span style="color:#ffaf00">(@ua.kozubka.context.Classes.ConstantsEnumList.RROServiceList.Where(d=>d.RROService==Model.RROService).Select(d=>d.ServiceName).FirstOrDefault())</span><i class="lni lni-chevron-right"></i></a></li>

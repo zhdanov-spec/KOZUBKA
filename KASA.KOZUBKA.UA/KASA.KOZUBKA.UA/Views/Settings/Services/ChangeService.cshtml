@@ -1,0 +1,75 @@
+﻿@model ua.kozubka.context.Models.RRO.RROSetting
+<form method="post">
+    <div class="container">
+        <div class="cart-wrapper-area py-3">
+            
+            <div class="shipping-method-choose mb-3">
+                <div class="card shipping-method-choose-title-card bg-success">
+                    <div class="card-body">
+                    <h6 class="text-center mb-0 text-white">Оберіть Cервіс ПРРО</h6>
+                    </div>
+                </div>
+                <div class="card shipping-method-choose-card">
+                    <div class="card-body">
+                        <div class="shipping-method-choose">
+                            <ul class="ps-0">
+                                <li>
+                                    <input id="@ua.kozubka.context.Classes.Constants.RROService.None" value="@((int)ua.kozubka.context.Classes.Constants.RROService.None)" type="radio" name="rroservice" @(Model.RROService == ua.kozubka.context.Classes.Constants.RROService.None ? "checked" : "")>
+                                    <label for="@ua.kozubka.context.Classes.Constants.RROService.None">
+                                        <span>Без ПРРО</span>
+                                    </label>
+                                    <div class="check"></div>
+                                </li>
+                                <li>
+                                    <input id="@ua.kozubka.context.Classes.Constants.RROService.Checkbox" value="@((int)ua.kozubka.context.Classes.Constants.RROService.Checkbox)" type="radio" name="rroservice"  @(Model.RROService == ua.kozubka.context.Classes.Constants.RROService.Checkbox ? "checked" : "")>
+                                    <label for="@ua.kozubka.context.Classes.Constants.RROService.Checkbox" class="d-flex align-items-center justify-content-between">
+                                        <span>CHECKBOX.UA</span>
+                                        <a href="#"  data-bs-toggle="modal" data-bs-target="#CheckBoxModal" class="btn btn-warning">Налаштувати</a>
+                                    </label>
+                                    <div class="check"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-success w-100" type="submit">Зберегти</button>
+                    </div>
+                </div>
+           
+            </div>
+           
+        </div>
+    </div>
+    <!-- Modal СheckBox -->
+    <div class="modal fade" id="CheckBoxModal" tabindex="-1" aria-labelledby="checboxModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checboxModalLabel">Сервіс CHECKBOX.UA</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="product-catagories">
+                        <div class="card user-data-card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <div class="title mb-2"><i class="lni lni-user"></i><span>Логин Касира CHECKBOX.UA</span></div>
+                                    <input asp-for="@Model.CHECKBOX_CASHIER_LOGIN"  class="form-control" type="text">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="title mb-2"><i class="lni lni-key"></i><span>Пароль Касира CHECKBOX.UA</span></div>
+                                    <input asp-for="@Model.CHECKBOX_CASHIER_PASSWORD" class="form-control" type="text">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="title mb-2"><i class="lni lni-keyboard"></i><span>Kлюч Ліцензії Каси CHECKBOX.UA</span></div>
+                                    <input asp-for="@Model.CHECKBOX_CASHDESK_LICENCE" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning w-100" data-bs-dismiss="modal">Прийняти</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
