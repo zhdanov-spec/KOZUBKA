@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CV.KOZUBKA.UA", "CV.KOZUBKA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KOZUBKA.UA", "KOZUBKA.UA\KOZUBKA.UA\KOZUBKA.UA.csproj", "{BB85947B-2FF6-4D0F-9142-1E5330E13813}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KASA.KOZUBKA.UA", "KASA.KOZUBKA.UA\KASA.KOZUBKA.UA\KASA.KOZUBKA.UA.csproj", "{8776A0D9-C363-4D20-AF13-5E441F81BE87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BB85947B-2FF6-4D0F-9142-1E5330E13813}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB85947B-2FF6-4D0F-9142-1E5330E13813}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB85947B-2FF6-4D0F-9142-1E5330E13813}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8776A0D9-C363-4D20-AF13-5E441F81BE87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8776A0D9-C363-4D20-AF13-5E441F81BE87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8776A0D9-C363-4D20-AF13-5E441F81BE87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8776A0D9-C363-4D20-AF13-5E441F81BE87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
