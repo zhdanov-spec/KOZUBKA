@@ -1,0 +1,62 @@
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Where.IWhereTeamRepository _teamRepository
+<div class="manage-jobs-table table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Член команди</th>
+                <th class="text-center">Локації в  телеграм</th>
+                <th>Дія</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (WhereTeamDetails == null)
+            {
+                <tr class="text-center"><td colspan="3">Зачекайте</td></tr>
+            }
+            else if (WhereTeamDetails.Count == 0)
+            {
+                <tr class="text-center"><td colspan="3">Немає членів команди</td></tr>
+            }
+            else
+            {
+                @foreach (var item in WhereTeamDetails)
+                {
+                    
+                    @if (ShowDeleted)
+                    {
+                        <MemberTableItem WhereTeamDetailItem="item"  SendInfoToTelegram="SendInfoToTelegramItem" DeleteRestoreTeamMember="DeleteRestoreTeamMemberItem" SendQueryLocationMember="SendQueryLocationMemberItem"/>
+                    }
+                    else if (!ShowDeleted && !item.IsDelete)
+                    {
+                        <MemberTableItem WhereTeamDetailItem="item"  SendInfoToTelegram="SendInfoToTelegramItem" DeleteRestoreTeamMember="DeleteRestoreTeamMemberItem" SendQueryLocationMember="SendQueryLocationMemberItem"/>
+                    }
+
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+    [Parameter] public List<WhereTeamDetail> WhereTeamDetails { get; set; }
+    [Parameter] public bool ShowDeleted { get; set; }
+    async Task SendInfoToTelegramItem(WhereTeamDetail whereTeamDetail)
+    {
+        whereTeamDetail.CanViewInfoInTelegram = !whereTeamDetail.CanViewInfoInTelegram;
+        await _teamRepository.AddUpdateTeamDetail(whereTeamDetail);
+    }
+    async Task SendQueryLocationMemberItem(WhereTeamDetail whereTeamDetail)
+    {
+        await _teamRepository.SendQueryLocation(whereTeamDetail);
+    }
+    async Task DeleteRestoreTeamMemberItem(WhereTeamDetail whereTeamDetail)
+    {
+        whereTeamDetail.IsDelete = !whereTeamDetail.IsDelete;
+        await _teamRepository.AddUpdateTeamDetail(whereTeamDetail);
+    }
+}

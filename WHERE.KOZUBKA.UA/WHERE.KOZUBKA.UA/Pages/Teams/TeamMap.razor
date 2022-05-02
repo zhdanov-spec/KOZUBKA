@@ -1,0 +1,127 @@
+﻿@attribute [Authorize]
+@page "/teams/map/{IdWhereTeam:int}"
+@layout CabinetLayout
+
+@using GoogleMapsComponents
+@using GoogleMapsComponents.Maps
+@using GoogleMapsComponents.Maps.Coordinates
+@using GoogleMapsComponents.Maps.Extension
+@using ua.kozubka.where.Classes
+
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.UserRepository _userRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Where.IWhereTeamRepository _teamRepository
+@inject NavigationManager NavManager
+
+<Breadcrumb H1Tag='Мій кабінет' Li1Href='/team' Li1Text='Мапа команди' />
+<div class="manage-jobs-box">
+    <div class="row">
+        <div class="col-lg-6">
+            <h3>Команда '@whereTeamModel.WhereTeam.TeamName'</h3>
+        </div>
+        <div class="col-lg-6">
+            <div class="text-end">
+                <NavLink href="teams" class="default-btn">Повернутись</NavLink>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12">
+            <GoogleMap @ref="@mapTeam" Id="map1" Options="@mapOptions" OnAfterInit="AddTeamMarker" ></GoogleMap>
+        </div>
+    </div>
+
+
+
+</div>
+@code {
+    [Parameter] public int IdWhereTeam { get; set; }
+    WhereTeamItemModel whereTeamModel = new()
+    {
+         WhereTeam = new(),
+         WhereTeamDetail=new()
+    };
+    User currentUser { get; set; } = null;
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    MapOptions mapOptions;
+    LatLngBounds bounds;
+    MarkerList markerList;
+    GoogleMap mapTeam;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        currentUser = await _userRepository.GetUserAsync(authState.User);
+        if (currentUser == null) NavManager.NavigateTo("/notfound");
+        whereTeamModel = await _teamRepository.GetUsersTeamById(IdWhereTeam, currentUser, false);
+        if (whereTeamModel == null) NavManager.NavigateTo("/notfound");
+        mapOptions = new MapOptions()
+            {
+                Zoom = 6,
+                Center = new LatLngLiteral()
+                {
+                    Lat = 50.53262,
+                    Lng = 30.600365
+                },
+                MapTypeId = MapTypeId.Roadmap
+            };
+    }
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            bounds = await LatLngBounds.CreateAsync(mapTeam.JsRuntime);
+        }
+    }
+    private async Task AddTeamMarker()
+    {
+        List<ExtendetLtLnClass> coordinates = new List<ExtendetLtLnClass>();
+        foreach(var item in whereTeamModel.WhereTeamDetail)
+        {
+            if(item.CurrentLatitude.HasValue && item.CurrentLongitude.HasValue)
+            {
+                coordinates.Add(new ExtendetLtLnClass { Lng = item.CurrentLongitude.Value, Lat = item.CurrentLatitude.Value, WhereTeamDetail=item});
+            }
+        };
+        await AddTeamMarkersGroup(coordinates);
+    }
+    private async Task AddTeamMarkersGroup(IEnumerable<ExtendetLtLnClass> coordinates)
+    {
+        if(markerList==null)
+        {
+            markerList = await MarkerList.CreateAsync(
+                mapTeam.JsRuntime,
+                coordinates.ToDictionary(s => Guid.NewGuid().ToString(), y => new MarkerOptions()
+                    {
+                        Position = new LatLngLiteral() { Lng = y.Lng, Lat = y.Lat },
+                        Map = mapTeam.InteropObject,
+                        Clickable = true,
+                        Title = $"{y.WhereTeamDetail.TelegramUserName}{Environment.NewLine}{y.WhereTeamDetail.TelegramFirstName} {y.WhereTeamDetail.TelegramLastName}{Environment.NewLine}Останнє оновлення-{y.WhereTeamDetail.LastUpdateCoordinates}",
+                        Visible = true,
+                        Label = new MarkerLabel
+                        {
+                            Text = $"{y.WhereTeamDetail.TelegramUserName} - {y.WhereTeamDetail.LastUpdateCoordinates}",
+                            FontWeight = "bold",
+                            Color = "#081397",
+                            FontSize = "20px",
+                            ClassName = "map-marker-label",
+                        }
+                    })
+            );
+        }
+        foreach (var latLngLiteral in coordinates)
+        {
+            await bounds.Extend(latLngLiteral);
+        }
+        await FitBounds();
+    }
+    private async Task FitBounds()
+    {
+        if (await this.bounds.IsEmpty())
+        {
+            return;
+        }
+
+        var boundsLiteral = await bounds.ToJson();
+        await mapTeam.InteropObject.FitBounds(boundsLiteral, OneOf.OneOf<int, Padding>.FromT0(5));
+    }
+    
+}

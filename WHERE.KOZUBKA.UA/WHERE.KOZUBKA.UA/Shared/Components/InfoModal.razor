@@ -1,0 +1,35 @@
+﻿@if (displayInfo)
+{
+    <div class="modal-backdrop show"></div>
+    <div class="modal fade show" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModal" aria-hidden="true" style="display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                </div>
+                <div class="modal-body">
+                    @ChildContent
+                </div>
+                <div class="modal-footer">
+                    <button @onclick="onAccept" type="button" class="btn btn-primary">Добре</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+@code {
+    bool displayInfo = false;
+
+    [Parameter] public string Title { get; set; } = "Інформація";
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback onAccept { get; set; }
+
+    public void Show() => displayInfo = true;
+    public void Hide() => displayInfo = false;
+
+}

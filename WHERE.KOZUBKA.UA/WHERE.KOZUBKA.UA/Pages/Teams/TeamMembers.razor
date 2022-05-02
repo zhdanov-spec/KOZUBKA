@@ -1,0 +1,66 @@
+﻿@attribute [Authorize]
+@page "/teams/members/{IdWhereTeam:int}"
+
+@layout CabinetLayout
+
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.UserRepository _userRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Where.IWhereTeamRepository _teamRepository
+@inject NavigationManager NavManager
+
+<Breadcrumb H1Tag='Мій кабінет' Li1Href='/teams' Li1Text='Мої команди' Li2Text='Члени' />
+<div class="manage-jobs-box">
+    @if (whereTeamModel is not null)
+    {
+        <div class="row">
+            <div class="col-lg-6">
+        <h3>Команда - @whereTeamModel.WhereTeam.TeamName</h3>
+        <div class="bar"></div>
+        </div>
+        <div class="col-lg-6">
+            <div class="text-end">
+                <NavLink href="teams" class="default-btn">Повернутись</NavLink>
+            </div>
+        </div>
+        </div>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" @onchange="(()=>ChangeShowDeleted())">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Показати видаленіх членів команди</label>
+        </div>
+        @if (whereTeamModel is not null)
+        {
+            <MemberTable WhereTeamDetails="whereTeamModel.WhereTeamDetail" ShowDeleted="showDeleted" />
+        }
+    }
+
+
+</div>
+
+@code {
+    [Parameter] public int IdWhereTeam { get; set; }
+    WhereTeamItemModel whereTeamModel { get; set; }
+    User currentUser { get; set; } = null;
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+    bool showDeleted = false;
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        currentUser = await _userRepository.GetUserAsync(authState.User);
+        if (currentUser == null) NavManager.NavigateTo("/notfound");
+        whereTeamModel = await _teamRepository.GetUsersTeamById(IdWhereTeam, currentUser, false);
+        if (whereTeamModel == null) NavManager.NavigateTo("/notfound");
+    }
+    async Task ChangeShowDeleted()
+    {
+        showDeleted = !showDeleted;
+        if (showDeleted)
+        {
+            whereTeamModel = await _teamRepository.GetUsersTeamById(IdWhereTeam, currentUser, true);
+        }
+        else
+        {
+            whereTeamModel = await _teamRepository.GetUsersTeamById(IdWhereTeam, currentUser, false);
+
+        }
+
+    }
+}

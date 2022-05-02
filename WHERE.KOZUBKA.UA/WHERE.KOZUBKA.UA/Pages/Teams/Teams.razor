@@ -1,0 +1,61 @@
+﻿@attribute [Authorize]
+@page "/teams"
+@layout CabinetLayout
+<PageTitle>Команди</PageTitle>
+
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Where.IWhereTeamRepository _teamRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.UserRepository _userRepository
+
+
+<Breadcrumb H1Tag='Мій кабінет' Li1Href='/teams' Li1Text='Мої команди' />
+<div class="manage-jobs-box">
+    <div class="row">
+        <div class="col-lg-6">
+            <h3>Команди</h3>
+        </div>
+        <div class="col-lg-6">
+            <div style="text-align: right !important">
+                <NavLink href="teams/create" class="default-btn">Додати команду<i class="flaticon-send"></i></NavLink>
+            </div>
+        </div>
+    </div>
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" @onchange="(()=>ChangeShowDeleted())">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Показати видалені команди</label>
+    </div>
+    <TeamTable WhereTeams="whereTeams" ShowDeleted="showDeleted" />
+
+</div>
+
+@code {
+    List<WhereTeamItemModel>? whereTeams { get; set; }
+    User? currentUser { get; set; }
+    bool showDeleted = false;
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        currentUser = await _userRepository.GetUserAsync(authState.User);
+        //whereTeams = await _teamRepository.WhereTeams.Where(d => d.TeamLead == currentUser && !d.IsDelete).ToListAsync();
+        whereTeams = await _teamRepository.GetUsersTeam(currentUser,!showDeleted);
+
+    }
+    async Task ChangeShowDeleted()
+    {
+        showDeleted = !showDeleted;
+        if (showDeleted)
+        {
+            //whereTeams = await _teamRepository.WhereTeams.Where(d => d.TeamLead == currentUser).ToListAsync();
+            whereTeams = await _teamRepository.GetUsersTeam(currentUser, showDeleted);
+        }
+
+        else
+        {
+            //whereTeams = await _teamRepository.WhereTeams.Where(d => d.TeamLead == currentUser && !d.IsDelete).ToListAsync();
+            whereTeams = await _teamRepository.GetUsersTeam(currentUser, !showDeleted);
+
+        }
+
+    }
+}

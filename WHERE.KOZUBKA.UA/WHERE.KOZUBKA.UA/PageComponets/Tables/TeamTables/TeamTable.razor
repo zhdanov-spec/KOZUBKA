@@ -1,0 +1,72 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.Where.IWhereTeamRepository _teamRepository
+
+
+<div class="manage-jobs-table table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Назва</th>
+                <th class="text-center">Створена</th>
+                <th class="text-center">Дія</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (WhereTeams == null)
+            {
+                <tr>Зачекайте</tr>
+            }
+            else if (WhereTeams.Count == 0)
+            {
+                <tr>У вас ще немає команд</tr>
+            }
+            else
+            {
+                @foreach (var item in WhereTeams)
+                {
+                    @if (ShowDeleted)
+                    {
+                        <TeamTableItem  TeamItem="item.WhereTeam" TeamItemDetail="item.WhereTeamDetail" DeleteRestoreTeam="DeleteRestoreTeamItem" RefreshLinkTeam="RefreshTeamItem" SendQueryLocationTeam="SendQueryLocationTeamItem"  />
+                    }
+                    else if (!ShowDeleted && !item.WhereTeam.IsDelete)
+                    {
+                        <TeamTableItem TeamItem="item.WhereTeam" TeamItemDetail="item.WhereTeamDetail" DeleteRestoreTeam="DeleteRestoreTeamItem" RefreshLinkTeam="RefreshTeamItem" SendQueryLocationTeam="SendQueryLocationTeamItem" />
+                    }
+
+
+                }
+            }
+            <InfoModal @ref="infoModal" onAccept="OnAccept">
+                <div class="text-danger">Запит відправлен</div>
+            </InfoModal>
+
+        </tbody>
+    </table>
+</div>
+
+@code {
+    InfoModal infoModal;
+
+    [Parameter] public List<WhereTeamItemModel> WhereTeams { get; set; }
+    [Parameter] public bool ShowDeleted { get; set; }
+    async Task DeleteRestoreTeamItem(WhereTeam whereTeam)
+    {
+        whereTeam.IsDelete = !whereTeam.IsDelete;
+        await _teamRepository.AddUpdateTeam(whereTeam);
+    }
+    async Task RefreshTeamItem(WhereTeam whereTeam)
+    {
+        whereTeam.InviteLinkCode = _teamRepository.GenerateInviteLink(out DateTime tillEnd);
+        whereTeam.InviteLinkCodeValidUntil = tillEnd;
+        await _teamRepository.AddUpdateTeam(whereTeam);
+    }
+    async Task SendQueryLocationTeamItem(WhereTeam whereTeam)
+    {
+        await _teamRepository.SendQueryLocation(whereTeam);
+        infoModal.Show();
+    }
+    void OnAccept()
+    {
+        infoModal.Hide();
+    }
+}

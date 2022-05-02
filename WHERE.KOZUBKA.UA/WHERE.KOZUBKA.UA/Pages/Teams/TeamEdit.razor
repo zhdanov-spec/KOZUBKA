@@ -1,0 +1,36 @@
+﻿@attribute [Authorize]
+@page "/teams/edit/{IdWhereTeam:int}"
+
+@layout CabinetLayout
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.UserRepository _userRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Where.IWhereTeamRepository _teamRepository
+@inject NavigationManager NavManager
+<Breadcrumb H1Tag='Мій кабінет' Li1Href='/teams' Li1Text='Мої команди' Li2Text='Редагувати' />
+<div class="post-a-new-job-box">
+    <h3>Редагування команди</h3>
+    <div class="bar"></div>
+    @if (whereTeamModel is not null)
+    {
+        <FormForTeam WhereTeamModel="whereTeamModel" OnValidSubmit="Edit" />
+    }
+
+</div>
+@code {
+    [Parameter] public int IdWhereTeam { get; set; }
+    WhereTeamItemModel whereTeamModel { get; set; }
+    User currentUser { get; set; } = null;
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        currentUser = await _userRepository.GetUserAsync(authState.User);
+        if (currentUser == null) NavManager.NavigateTo("/notfound");
+        whereTeamModel = await _teamRepository.GetUsersTeamById(IdWhereTeam, currentUser,false);
+        if(whereTeamModel==null) NavManager.NavigateTo("/notfound");
+    }
+    async Task Edit()
+    {
+        await _teamRepository.AddUpdateTeam(whereTeamModel.WhereTeam);
+        NavManager.NavigateTo("/teams");
+    }
+}

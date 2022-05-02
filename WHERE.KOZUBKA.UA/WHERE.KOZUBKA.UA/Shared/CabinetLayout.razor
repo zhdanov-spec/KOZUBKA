@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime _jsCustom
+
+
+<CabinetMenu />
+
+<div class="main-dashboard-content d-flex flex-column">
+    <TopMenu ShowLogo="false"/>
+    @Body
+</div>
+
+@code {
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _jsCustom.InvokeVoidAsync("WhereJs.initialiseWhereJS");
+        }
+    }
+
+}
+

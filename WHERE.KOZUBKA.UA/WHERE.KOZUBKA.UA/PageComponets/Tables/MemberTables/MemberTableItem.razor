@@ -1,0 +1,44 @@
+<tr class="@(WhereTeamDetailItem.IsDelete?"bg-success":"")">
+    <td>
+        <h5>@WhereTeamDetailItem.TelegramUserName</h5>
+        <span><i class="ri-user-line"></i> @WhereTeamDetailItem.TelegramFirstName @WhereTeamDetailItem.TelegramLastName</span>
+        @if(!WhereTeamDetailItem.IsDelete)
+        {
+            <div class="d-grid">
+                <button @onclick="(()=>SendQueryLocationMember.InvokeAsync(WhereTeamDetailItem))" class="default-btn"><i class="ri-user-search-line"></i>Запит локацій</button>
+            </div>
+        }
+    </td>
+    <td>
+        <div class="form-check form-switch d-flex justify-content-center">
+            <input class="form-check-input" type="checkbox" checked="@WhereTeamDetailItem.CanViewInfoInTelegram" @onchange="(()=>SendInfoToTelegram.InvokeAsync(WhereTeamDetailItem))">
+        </div>
+    </td>
+    <td>
+
+        <ul class="option-list">
+
+            @if (WhereTeamDetailItem.IsDelete)
+            {
+                <li><button @onclick="(()=>DeleteRestoreTeamMember.InvokeAsync(WhereTeamDetailItem))" class="option-btn d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Restore" type="button"><i class="ri-restart-line"></i></button></li>
+            }
+            else
+            {
+                <li><button @onclick="(()=>DeleteRestoreTeamMember.InvokeAsync(WhereTeamDetailItem))" class="option-btn d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Видалити з команди" type="button"><i class="ri-close-line"></i></button></li>
+
+            }
+
+
+        </ul>
+    </td>
+</tr>
+@code {
+    [Parameter] public WhereTeamDetail WhereTeamDetailItem { get; set; }
+    [Parameter] public EventCallback<WhereTeamDetail> SendInfoToTelegram { get; set; }
+    [Parameter] public EventCallback<WhereTeamDetail> DeleteRestoreTeamMember { get; set; }
+    [Parameter] public EventCallback<WhereTeamDetail> SendQueryLocationMember { get; set; }
+
+
+
+
+}

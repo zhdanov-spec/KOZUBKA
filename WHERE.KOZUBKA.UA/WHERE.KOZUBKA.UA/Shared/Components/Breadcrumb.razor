@@ -1,0 +1,22 @@
+﻿<div class="breadcrumb-area">
+    <h1>@H1Tag</h1>
+    <ol class="breadcrumb">
+        @if(!string.IsNullOrEmpty(Li1Text))
+        {
+            <li class="item"><a href="@Li1Href">@Li1Text</a></li>    
+        }
+        @if(!string.IsNullOrEmpty(Li2Text))
+        {
+            <li class="item">@Li2Text</li>    
+        }
+
+        
+    </ol>
+</div>
+
+@code {
+    [Parameter] public string H1Tag { get; set; }
+    [Parameter] public string Li1Href { get; set; }
+    [Parameter] public string Li1Text { get; set; }
+    [Parameter] public string Li2Text { get; set; }
+}

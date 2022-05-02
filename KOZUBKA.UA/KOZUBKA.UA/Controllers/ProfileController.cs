@@ -52,10 +52,10 @@ namespace ua.kozubka.Controllers
                     ModelState.AddModelError(string.Empty, "Телефонний номер не вірний");
                 }
             }
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                var result = await _userRepository.UpdateUserAsync(currentUser.Id, model.Email, model.UName, model.ULastName, model.PhoneNumber,profileImage);
-                if(!result.Succeeded)
+                var result = await _userRepository.UpdateUserAsync(currentUser.Id, model.Email, model.UName, model.ULastName, model.PhoneNumber, profileImage);
+                if (!result.Succeeded)
                 {
                     result.SetModelErrors(ModelState);
                     return View(model);
@@ -66,7 +66,7 @@ namespace ua.kozubka.Controllers
                 return View("~/Views/Home/Messages.cshtml");
             }
             return View(model);
-            
+
         }
 
         public IActionResult ChangePassword()
@@ -75,12 +75,12 @@ namespace ua.kozubka.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(string password,string newpassword, string confirmnewpassword)
+        public async Task<IActionResult> ChangePassword(string password, string newpassword, string confirmnewpassword)
         {
             var user = await _userRepository.GetUserAsync(User);
-            if(user!=null)
+            if (user != null)
             {
-                if(string.IsNullOrEmpty(password))
+                if (string.IsNullOrEmpty(password))
                 {
                     ModelState.AddModelError(string.Empty, "Старий пароль невірний");
                 }

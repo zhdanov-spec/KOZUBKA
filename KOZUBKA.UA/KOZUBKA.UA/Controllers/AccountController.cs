@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ua.kozubka.context.Classes;
@@ -219,6 +220,7 @@ namespace ua.kozubka.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(AccountViewModel model, string captcha)
         {
+            
 
             if (!await _captchaValidator.IsCaptchaPassedAsync(captcha))
             {

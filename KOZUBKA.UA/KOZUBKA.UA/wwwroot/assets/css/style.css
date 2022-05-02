@@ -20,3 +20,22 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 	margin-left: 2px;
 	margin-right: 2px;
 }
+
+.adsexample_responsive_1 {
+	width: 320px;
+	height: 100px;
+}
+
+@media(min-width: 500px) {
+	.adsexample_responsive_1 {
+		width: 468px;
+		height: 60px;
+	}
+}
+
+@media(min-width: 800px) {
+	.adsexample_responsive_1 {
+		width: 728px;
+		height: 90px;
+	}
+}

@@ -1,0 +1,50 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settings
+@inject NavigationManager NavigationManager
+<div class="side-nav-inner">
+    <AuthorizeView>
+        <Authorized>
+            <div class="side-nav justify-content-center align-items-center">
+                <div class="side-nav-item pb-2" style="display:grid">
+                    <NavLink href="/teams" class="default-btn two">
+                        Команди <i class="ri-user-3-line"></i>
+                    </NavLink>
+                </div>
+
+                <div class="side-nav-item" style="display:grid">
+                    <a href="@logoutPage" class="default-btn" >
+                        Вийти <i class="ri-briefcase-2-line"></i>
+                    </a>
+                </div>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="side-nav justify-content-center align-items-center">
+                <div class="side-nav-item pb-2" style="display:grid">
+                    <NavLink href="@loginPage" class="default-btn two">
+                        Увійти <i class="ri-user-3-line"></i>
+                    </NavLink>
+                </div>
+
+                <div class="side-nav-item" style="display:grid">
+                    <a href="@registerPage" class="default-btn" >
+                        Реєстрація <i class="ri-briefcase-2-line"></i>
+                    </a>
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private string currentSite = "";
+    private string logoutPage = "";
+    private string loginPage = "";
+    private string registerPage = "";
+    protected override void OnInitialized()
+    {
+        currentSite = NavigationManager.BaseUri;
+        logoutPage = $"{ua.kozubka.context.Classes.ConstantsDynamicValue.LogoutPage}{currentSite}";
+        loginPage = $"{ua.kozubka.context.Classes.ConstantsDynamicValue.LoginPage}{currentSite}";
+        registerPage = $"{ua.kozubka.context.Classes.ConstantsDynamicValue.RegisterPage}{currentSite}";
+    }
+}

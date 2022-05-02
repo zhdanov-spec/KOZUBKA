@@ -1,0 +1,66 @@
+﻿<div class="navbar-area">
+    <div class="mobile-responsive-nav">
+        <div class="container-fluid">
+            <div class="mobile-responsive-menu">
+                <div class="logo">
+                    <a href="/">
+                        <h3>WHERE KOZUBKA</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="desktop-nav desktop-nav-one nav-area">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-md navbar-light ">
+                @if (ShowLogo)
+                {
+                    <NavLink class="navbar-brand" href="/">
+                        WHERE KOZUBKA
+                    </NavLink>
+
+                }
+
+
+                <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link">
+                                Про Нас
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                    <div class="others-options d-flex align-items-center">
+                        <div class="optional-item">
+                            <DeskTopLoginButton />
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="side-nav-responsive">
+        <div class="container-max">
+            <div class="dot-menu">
+                <div class="circle-inner">
+                    <div class="circle circle-one"></div>
+                    <div class="circle circle-two"></div>
+                    <div class="circle circle-three"></div>
+                </div>
+            </div>
+
+            <div class="container">
+                <MobileTopLoginButton />
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter] public bool ShowLogo { get; set; }
+   
+}

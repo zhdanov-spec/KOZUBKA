@@ -1,0 +1,111 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace ua.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject ua.kozubka.context.Services.Repositories.GeneralRepository.IDesignerRepository _designerRepository
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _setting
+@{
+    var fileSite = _setting.GetSetting(kozubka.context.Classes.Constants.SettingsOptions.FileSite);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link rel="stylesheet" href="./css/bootstrap/bootstrap.min.css" />
+    <link href="./assets/css/style.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="WHERE.KOZUBKA.UA.styles.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap">
+    </noscript>
+    <!-- Remixicon CSS -->
+    <link rel="stylesheet" href="./assets/fonts/remixicon.css">
+    <!-- Metismenu CSS -->
+    <link rel="stylesheet" href="./assets/css/metismenu.min.css">
+    <!-- Odometer CSS -->
+    <link rel="stylesheet" href="./assets/css/odometer.min.css">
+    <!-- Meanmenu CSS -->
+    <link rel="stylesheet" href="./assets/css/meanmenu.min.css">
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="./assets/css/responsive.css">
+
+    <link rel="stylesheet" href="~/assets/css/dashboard.css" />
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2ekDZr9MwFX15a_qE2S6_bZfPJB9kZzs&v=3"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="~/assets/images/favicon.png">
+
+
+
+    <meta property="og:type" content="website" />
+    <meta property="fb:app_id" content="768205707196968" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:site_name" content="Мої команди від KOZUBKA™" />
+    <meta property="og:title" content="KOZUBKA — команда на зв'язку" />
+    <meta property="og:description" content="Легкий спосіб знайти свою родину, знайомих, колег" />
+    <meta property="og:image" content="@string.Format("{0}/files/images/where/where-kozubka-logo.png",fileSite)">
+    <meta property="og:type" content="article">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+</head>
+<body>
+    @RenderBody()
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="https://unpkg.com/@@googlemaps/markerclusterer/dist/index.min.js"></script>
+    <script src="_content/BlazorGoogleMaps/js/objectManager.js"></script>
+    <script src="_framework/blazor.server.js"></script>
+    <!-- Jquery Min JS -->
+    <script src="./assets/js/jquery.min.js"></script>
+    <!-- Bootstrap Bundle Min JS -->
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+    <!-- Magnific Popup JS -->
+    <script src="./assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- Odometer JS -->
+    <script src="./assets/js/odometer.min.js"></script>
+    <!-- Appear Min JS -->
+    <script src="./assets/js/jquery.appear.min.js"></script>
+    <!-- Meanmenu JS -->
+    <script src="./assets/js/meanmenu.min.js"></script>
+    <!-- Metismenu JS -->
+    <script src="./assets/js/metismenu.min.js"></script>
+    <!-- Simplebar JS -->
+    <script src="./assets/js/simplebar.min.js"></script>
+    <!-- Dropzone JS -->
+    <script src="./assets/js/dropzone.min.js"></script>
+    <!-- Sticky Sidebar JS -->
+    <script src="./assets/js/sticky-sidebar.min.js"></script>
+    <!-- TweenMax JS -->
+    <script src="./assets/js/tweenMax.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="./assets/js/owl.carousel.min.js"></script>
+    <!-- Wow Min JS -->
+    <script src="./assets/js/wow.min.js"></script>
+    <!-- Ajaxchimp Min JS -->
+    <script src="./assets/js/jquery.ajaxchimp.min.js"></script>
+    <!-- Form Validator Min JS -->
+    <script src="./assets/js/form-validator.min.js"></script>
+    <!-- Contact Form JS -->
+    <script src="./assets/js/contact-form-script.js"></script>
+    <!-- Custom Form JS -->
+    <script src="./assets/js/custom.js"></script>
+
+
+</body>
+</html>

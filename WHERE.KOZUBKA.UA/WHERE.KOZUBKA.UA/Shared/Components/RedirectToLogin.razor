@@ -1,0 +1,9 @@
+﻿@inject NavigationManager NavigationManager
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settings
+@code {
+     protected async override Task OnInitializedAsync()
+     {
+         string loginPage = await _settings.GetSettingAsync(context.Classes.Constants.SettingsOptions.LoginFullPage);
+         NavigationManager.NavigateTo($"{loginPage}{Uri.EscapeDataString(NavigationManager.Uri)}");
+     }
+ } 

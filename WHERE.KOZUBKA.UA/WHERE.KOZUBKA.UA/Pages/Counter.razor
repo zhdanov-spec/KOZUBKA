@@ -1,0 +1,47 @@
+﻿@page "/counter"
+@inject NavigationManager NavigationManager
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settings
+@using GoogleMapsComponents
+@using GoogleMapsComponents.Maps
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+1
+<GoogleMap  Id="map1" Options="@mapOptions" ></GoogleMap>
+2
+@code {
+    private int currentCount = 0;
+    private string loginPage = "";
+    private MapOptions mapOptions;
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if(!user.Identity.IsAuthenticated)
+        {
+            loginPage=_settings.GetSetting(context.Classes.Constants.SettingsOptions.LoginFullPage);
+            NavigationManager.NavigateTo($"{loginPage}{Uri.EscapeDataString(NavigationManager.Uri)}");
+        }
+        mapOptions = new MapOptions()
+            {
+                Zoom = 6,
+                Center = new LatLngLiteral()
+                {
+                    Lat = 48.6437209,
+                    Lng = 29.7949079
+                },
+                MapTypeId = MapTypeId.Roadmap
+            };
+    }
+}

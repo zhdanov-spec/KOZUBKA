@@ -1,0 +1,35 @@
+﻿@using ua.kozubka.context.Models.Where
+@inject ua.kozubka.context.Services.Repositories.ModelRepository.Where.IWhereTeamRepository _teamRepository
+<EditForm Model="WhereTeamModel.WhereTeam" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="form-group">
+                <label>Назва команди</label>
+                <InputText @bind-Value="WhereTeamModel.WhereTeam.TeamName" type="text" class="form-control" placeholder="Назва вашої команди"></InputText>
+                <ValidationMessage For="(()=>WhereTeamModel.WhereTeam.TeamName)"></ValidationMessage>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12">
+            <div class="form-group">
+                <label>Опис команди</label>
+                <InputTextArea @bind-Value="WhereTeamModel.WhereTeam.TeamDescription" cols="30" rows="2" placeholder="Короткий опис для команди..." class="form-control"></InputTextArea>
+                <ValidationMessage For="(()=>WhereTeamModel.WhereTeam.TeamDescription)"></ValidationMessage>
+            </div>
+        </div>
+       
+        
+        
+        <div class="col-lg-12 col-md-12 text-end">
+            <button class="default-btn">Зберегти </button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public WhereTeamItemModel WhereTeamModel { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public bool IsEdit { get; set; } = true;
+
+}

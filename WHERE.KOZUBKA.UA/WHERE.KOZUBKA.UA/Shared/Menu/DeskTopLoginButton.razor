@@ -1,0 +1,37 @@
+﻿@inject ua.kozubka.context.Services.Repositories.ModelRepository.ISettingRepository _settings
+@inject NavigationManager NavigationManager
+
+<div class="others-options d-flex align-items-center">
+    <AuthorizeView>
+        <Authorized>
+            <div class="optional-item">
+                <NavLink href="/teams" class="default-btn two border-radius-5">Команди <i class="ri-user-3-line"></i></NavLink>
+            </div>
+            <div class="optional-item">
+                <NavLink href="@logoutPage" class="default-btn border-radius-5">Вийти <i class="ri-briefcase-2-line"></i></NavLink>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="optional-item">
+                <NavLink href="@loginPage" class="default-btn two border-radius-5">Увійти <i class="ri-user-3-line"></i></NavLink>
+            </div>
+            <div class="optional-item">
+                <NavLink href="@registerPage" class="default-btn border-radius-5">Реєстрація <i class="ri-briefcase-2-line"></i></NavLink>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private string currentSite = "";
+    private string loginPage = "";
+    private string registerPage = "";
+    private string logoutPage = "";
+    protected override void OnInitialized()
+    {
+        currentSite = NavigationManager.BaseUri;
+        logoutPage = $"{ua.kozubka.context.Classes.ConstantsDynamicValue.LogoutPage}{currentSite}";
+        loginPage = $"{ua.kozubka.context.Classes.ConstantsDynamicValue.LoginPage}{currentSite}";
+        registerPage = $"{ua.kozubka.context.Classes.ConstantsDynamicValue.RegisterPage}{currentSite}";
+    }
+}

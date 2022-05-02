@@ -1,0 +1,80 @@
+﻿@inject IJSRuntime JSRuntime
+<tr class="@(TeamItem.IsDelete?"bg-success":"")">
+    <td>
+        <h5>@TeamItem.TeamName</h5>
+        <span><i class="ri-map-pin-line"></i> Кількість членів @TeamItemDetail.Count()</span>
+        <div class="d-block">
+            <span><i class="ri-telegram-line"></i> Посилання Телеграм</span>
+            <ul class="d-inline option-list">
+                <li><NavLink href="@TeamItem.InviteLinkCode" target="_blank" class="option-btn d-inline-block text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Перейти"><i class="ri-ie-line"></i></NavLink></li>
+                <li><button @onclick="CopyTextToClipboard" class="option-btn d-inline-block text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Скопіювати в буфер"><i class="ri-file-copy-line"></i></button></li>
+            </ul>
+
+            <div>
+                @if(TeamItem.InviteLinkCodeValidUntil<DateTime.Now)
+                {
+                    <span class="text-danger"><small>Посилання не дійсне</small></span>
+                }
+                else
+                {
+                    <span class="text-primary"><small>Дійсно до @TeamItem.InviteLinkCodeValidUntil</small></span>    
+                }
+                
+                <ul class="option-list d-inline-block">
+                    <li>
+                        <button @onclick="(()=>RefreshLinkTeam.InvokeAsync(TeamItem))" class="option-btn d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Оновити посилання" type="button"><i class="ri-refresh-line"></i></button>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        @if (!TeamItem.IsDelete && TeamItemDetail.Count() > 0)
+        {
+            <div class="d-grid">
+                <button @onclick="(()=>SendQueryLocationTeam.InvokeAsync(TeamItem))" class="default-btn"><i class="ri-user-search-line"></i>Запит локацій</button>
+            </div>
+            
+        }
+    </td>
+    <td class="text-center">@TeamItem.TeamCreated.ToShortDateString()</td>
+    <td class="text-center">
+        <ul class="option-list pb-3">
+            @if (TeamItem.IsDelete)
+            {
+                <li><button @onclick="(()=>DeleteRestoreTeam.InvokeAsync(TeamItem))" class="option-btn d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Restore" type="button"><i class="ri-restart-line"></i></button></li>
+            }
+            else
+            {
+                <li><button @onclick="(()=>DeleteRestoreTeam.InvokeAsync(TeamItem))" class="option-btn d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" type="button"><i class="ri-close-line"></i></button></li>
+                <li><NavLink href="@urlEdit" class="option-btn d-inline-block text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Редагувати команду"><i class="ri-edit-2-fill"></i></NavLink></li>
+                <li><NavLink href="@urlMembers" class="option-btn d-inline-block text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Члени команди"><i class="ri-team-line"></i></NavLink></li>
+                <li><NavLink href="@urlMap" class="option-btn d-inline-block text-center" data-bs-toggle="tooltip" data-bs-placement="top" title="Перейти до карти" type="button"><i class="ri-eye-line"></i></NavLink></li>
+
+            }
+        </ul>
+
+    </td>
+</tr>
+
+@code {
+    [Parameter] public WhereTeam TeamItem { get; set; }
+    [Parameter] public List<WhereTeamDetail> TeamItemDetail { get; set; }
+    [Parameter] public EventCallback<WhereTeam> DeleteRestoreTeam { get; set; }
+    [Parameter] public EventCallback<WhereTeam> RefreshLinkTeam { get; set; }
+    [Parameter] public EventCallback<WhereTeam> SendQueryLocationTeam { get; set; }
+    string urlEdit = string.Empty;
+    string urlMap = string.Empty;
+    string urlMembers = string.Empty;
+    
+    protected override void OnInitialized()
+    {
+        urlEdit = $"/teams/edit/{TeamItem.IdWhereTeam}";
+        urlMap = $"/teams/map/{TeamItem.IdWhereTeam}";
+        urlMembers = $"/teams/members/{TeamItem.IdWhereTeam}";
+    }
+    private async Task CopyTextToClipboard()
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", TeamItem.InviteLinkCode);
+    }
+    
+}

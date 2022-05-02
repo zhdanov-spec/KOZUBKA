@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime _jsCustom
+@inject NavigationManager NavigationManager
+
+
+<TopMenu ShowLogo="true"/>
+
+@Body
+
+
+@code {
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _jsCustom.InvokeVoidAsync("WhereJs.initialiseWhereJS");
+        }
+    }
+
+}
+
